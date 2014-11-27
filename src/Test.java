@@ -23,6 +23,7 @@ public class Test
         String controller = "TEVC_MCTS.Agent";
         String controller_ol = "sampleOLMCTS.Agent";
         String controller_mol = "MacroOLMCTS.Agent";
+        String controller_macroMCTS = "MacroMCTS.Agent";
         String pathfinder = "controllers.pathfinder.Agent";
 
         //Available games:
@@ -67,7 +68,7 @@ public class Test
         //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
-
+        ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
 
         // 3. This replays a game from an action file previously recorded
         //String readActionsFile = "actionsFile_aliens_lvl0.txt";  //This example is for
@@ -94,7 +95,7 @@ public class Test
 
         //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed, filename);
         //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed, filename);
-        Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
+        //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
 
 
@@ -132,7 +133,7 @@ public class Test
         }
                      */
 
-
+        //runNMacro(gamesPath, games, controller_macroMCTS, args);
         //runNMacro(gamesPath, games, controller_mol, args);
 
     }
