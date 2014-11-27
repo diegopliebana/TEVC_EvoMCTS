@@ -1,8 +1,6 @@
 package core;
 
-import MacroOLMCTS.macro.ConstantMacroFeed;
-import TEVC_MCTS.Config;
-import controllers.sampleMCTS.Agent;
+import macroactions.ConstantMacroFeed;
 import core.competition.CompetitionParameters;
 import core.game.Game;
 import core.game.StateObservation;

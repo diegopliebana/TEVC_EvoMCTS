@@ -1,10 +1,11 @@
-package MacroOLMCTS;
+package MacroMCTS;
 
+import core.game.Observation;
+import core.game.StateObservation;
+import core.player.AbstractPlayer;
 import macroactions.IMacroFeed;
 import macroactions.MacroAction;
 import macroactions.RandomNMacroFeed;
-import core.game.StateObservation;
-import core.player.AbstractPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -22,17 +23,18 @@ public class Agent extends AbstractPlayer {
 
     public static int NUM_ACTIONS;
     public static int MCTS_ITERATIONS = 100;
+    public static int ROLLOUT_DEPTH = 30;
     public static double K = Math.sqrt(2);
-    public static double REWARD_DISCOUNT = 1.00;
-    public static int ROLLOUT_DEPTH = 30; //10;
+    public static double REWARD_DISCOUNT = 1.0; //value of 1.0 equals to no discount
     public static int MACROACTION_LENGTH = 5;
 
-    //public static Types.ACTIONS[] actions;
 
     public static MacroAction[] actions;
     public MacroAction currentMacro;
     public IMacroFeed macroFeed;
-
+    /**
+     * Random generator for the agent.
+     */
     protected SingleMCTSPlayer mctsPlayer;
 
     /**
@@ -42,7 +44,7 @@ public class Agent extends AbstractPlayer {
      */
     public Agent(StateObservation so, ElapsedCpuTimer elapsedTimer)
     {
-        //Get the actions in a static array.
+//Get the actions in a static array.
         ArrayList<Types.ACTIONS> act = so.getAvailableActions();
         actions = new MacroAction[act.size()];
         NUM_ACTIONS = actions.length;
@@ -93,8 +95,8 @@ public class Agent extends AbstractPlayer {
      * @param elapsedTimer Timer when the action returned is due.
      * @return An action for the current state
      */
-    public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer)
-    {
+    public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+
         //System.out.println("#########");
         //Advance to the starting point after the current macroactions-action is executed.
         if(currentMacro != null)

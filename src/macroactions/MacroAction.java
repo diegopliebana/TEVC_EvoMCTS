@@ -1,18 +1,17 @@
-package MacroOLMCTS.macro;
+package macroactions;
 
-import MacroOLMCTS.Agent;
 import ontology.Types;
 
 /**
- * Class that encapsulates macro-actions.
+ * Class that encapsulates macroactions-actions.
  * Created by dperez on 16/11/2014.
  */
 public class MacroAction
 {
-    //The proper macro-action.
+    //The proper macroactions-action.
     public Types.ACTIONS[] actions;
 
-    //Indicates position in the macro-action.
+    //Indicates position in the macroactions-action.
     public int cursor;
 
     public MacroAction(Types.ACTIONS[] actions)

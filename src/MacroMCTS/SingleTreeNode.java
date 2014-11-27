@@ -1,7 +1,8 @@
-package MacroOLMCTS;
+package MacroMCTS;
 
-import macroactions.MacroAction;
+import FastEvoMCTS.TranspositionTable;
 import core.game.StateObservation;
+import macroactions.MacroAction;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.Utils;
@@ -14,27 +15,28 @@ public class SingleTreeNode
     private static final double HUGE_POSITIVE =  10000000.0;
     public static double epsilon = 1e-6;
     public static double egreedyEpsilon = 0.05;
+    public StateObservation state;
     public SingleTreeNode parent;
     public SingleTreeNode[] children;
     public double totValue;
     public int nVisits;
     public static Random m_rnd;
     public int m_depth;
+    //protected static double[] lastBounds = new double[]{0,1}; //not in use since 15.11.2014
+    //private static double[] curBounds = new double[]{0,1};
     protected static double[] bounds = new double[]{Double.MAX_VALUE, -Double.MAX_VALUE};
-    public int childIdx;
-
-    public static StateObservation rootState;
 
     public SingleTreeNode(Random rnd) {
-        this(null, -1, rnd);
+        this(null, null, rnd);
     }
 
-    public SingleTreeNode(SingleTreeNode parent, int childIdx, Random rnd) {
+    public SingleTreeNode(StateObservation state, SingleTreeNode parent, Random rnd) {
+        //System.out.println("state = " + state);
+        this.state = state;
         this.parent = parent;
         this.m_rnd = rnd;
         children = new SingleTreeNode[Agent.NUM_ACTIONS];
         totValue = 0.0;
-        this.childIdx = childIdx;
         if(parent != null)
             m_depth = parent.m_depth+Agent.MACROACTION_LENGTH;
         else
@@ -44,20 +46,18 @@ public class SingleTreeNode
 
     public void mctsSearch(ElapsedCpuTimer elapsedTimer) {
 
+
         double avgTimeTaken = 0;
         double acumTimeTaken = 0;
         long remaining = elapsedTimer.remainingTimeMillis();
         int numIters = 0;
 
         int remainingLimit = 5;
-        //while(remaining > 2*avgTimeTaken && remaining > remainingLimit){
+        ///while(remaining > 2*avgTimeTaken && remaining > remainingLimit){
         while(numIters < Agent.MCTS_ITERATIONS){
-
-            StateObservation state = rootState.copy();
-
             ElapsedCpuTimer elapsedTimerIteration = new ElapsedCpuTimer();
-            SingleTreeNode selected = treePolicy(state);
-            double delta = selected.rollOut(state);
+            SingleTreeNode selected = treePolicy();
+            double delta = selected.rollOut();
             backUp(selected, delta);
 
             numIters++;
@@ -66,19 +66,25 @@ public class SingleTreeNode
             avgTimeTaken  = acumTimeTaken/numIters;
             remaining = elapsedTimer.remainingTimeMillis();
         }
+
+        //System.out.println("-- " + numIters + " -- ( " + avgTimeTaken + ")");
+
+        //System.out.println(this.state.getGameTick() + "," + numIters);
+        //System.out.println(numIters);
     }
 
-    public SingleTreeNode treePolicy(StateObservation state) {
+    public SingleTreeNode treePolicy() {
 
         SingleTreeNode cur = this;
 
-        while (!state.isGameOver() && cur.m_depth < Agent.ROLLOUT_DEPTH)
+        while (!cur.state.isGameOver() && cur.m_depth < Agent.ROLLOUT_DEPTH)
         {
             if (cur.notFullyExpanded()) {
-                return cur.expand(state);
+                return cur.expand();
 
             } else {
-                SingleTreeNode next = cur.uct(state);
+                SingleTreeNode next = cur.uct();
+                //SingleTreeNode next = cur.egreedy();
                 cur = next;
             }
         }
@@ -87,7 +93,7 @@ public class SingleTreeNode
     }
 
 
-    public SingleTreeNode expand(StateObservation state) {
+    public SingleTreeNode expand() {
 
         int bestAction = 0;
         double bestValue = -1;
@@ -100,35 +106,32 @@ public class SingleTreeNode
             }
         }
 
-        //Roll the state
-        advanceMacro(state, Agent.actions[bestAction]);
+        StateObservation nextState = state.copy();
+        advanceMacro(nextState, Agent.actions[bestAction]);
 
-
-        SingleTreeNode tn = new SingleTreeNode(this,bestAction,this.m_rnd);
+        SingleTreeNode tn = new SingleTreeNode(nextState, this, this.m_rnd);
         children[bestAction] = tn;
         return tn;
+
     }
 
-    public SingleTreeNode uct(StateObservation state) {
+    public SingleTreeNode uct() {
 
         SingleTreeNode selected = null;
         double bestValue = -Double.MAX_VALUE;
-        //System.out.println("Reward bounds at UCT. LAST: " + lastBounds[0] + ", " + lastBounds[1]
-        //                    + ", CURR: " + curBounds[0] + ", " + curBounds[1]);
-
         for (SingleTreeNode child : this.children)
         {
             double hvVal = child.totValue;
-            double childValue =  hvVal / (child.nVisits + this.epsilon);
+            double childValue = hvVal / (child.nVisits + this.epsilon);
 
             childValue = Utils.normalise(childValue, bounds[0], bounds[1]);
 
             double uctValue = childValue +
                     Agent.K * Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + this.epsilon));
 
+            // small sampleRandom numbers: break ties in unexpanded nodes
             uctValue = Utils.noise(uctValue, this.epsilon, this.m_rnd.nextDouble());     //break ties randomly
 
-            // small sampleRandom numbers: break ties in unexpanded nodes
             if (uctValue > bestValue) {
                 selected = child;
                 bestValue = uctValue;
@@ -136,43 +139,38 @@ public class SingleTreeNode
         }
         if (selected == null)
         {
-            throw new RuntimeException("Warning! returning null: " + bestValue + " : " + this.children.length + " " +
-            + bounds[0] + " " + bounds[1]);
+            throw new RuntimeException("Warning! returning null: " + bestValue + " : " + this.children.length);
         }
-
-        //Roll the state:
-        //state.advance(Agent.actions[selected.childIdx].actions[0]); //TODO: macroactions-advance, check!!
-        advanceMacro(state, Agent.actions[selected.childIdx]);
 
         return selected;
     }
 
 
-    public double rollOut(StateObservation state)
+    public double rollOut()
     {
+        StateObservation rollerState = state.copy();
         int thisDepth = this.m_depth;
 
-        while (!finishRollout(state,thisDepth)) {
+        while (!finishRollout(rollerState,thisDepth)) {
 
             int action = m_rnd.nextInt(Agent.NUM_ACTIONS);
-            //state.advance(Agent.actions[action].actions[0]); //TODO: macroactions-advance, check!!
             advanceMacro(state, Agent.actions[action]);
             thisDepth+=Agent.MACROACTION_LENGTH;
         }
 
 
-        double rawDelta = value(state);
+        double rawDelta = value(rollerState);
 
         //Discount factor:
         double accDiscount = Math.pow(Agent.REWARD_DISCOUNT,thisDepth); //1
+        //double accDiscount = Math.pow(Config.REWARD_DISCOUNT, thisDepth + (state.getGameTick() - 1));   //consider the distance from the beginning of the game
+
         double delta = rawDelta * accDiscount;
 
         if(delta < bounds[0])
             bounds[0] = delta;
         if(delta > bounds[1])
             bounds[1] = delta;
-
-        //double normDelta = Utils.normalise(delta ,lastBounds[0], lastBounds[1]);
 
         return delta;
     }
@@ -184,9 +182,11 @@ public class SingleTreeNode
         double rawScore = a_gameState.getGameScore();
 
         if(gameOver && win == Types.WINNER.PLAYER_LOSES)
+            //return HUGE_NEGATIVE;
             rawScore += HUGE_NEGATIVE;
 
-        if(gameOver && win == Types.WINNER.PLAYER_WINS)
+        else if(gameOver && win == Types.WINNER.PLAYER_WINS)
+            //return HUGE_POSITIVE;
             rawScore += HUGE_POSITIVE;
 
         return rawScore;
@@ -194,7 +194,6 @@ public class SingleTreeNode
 
     public boolean finishRollout(StateObservation rollerState, int depth)
     {
-        //if(depth >= Agent.ROLLOUT_DEPTH)      //rollout end condition.
         if((depth + Agent.MACROACTION_LENGTH) > Agent.ROLLOUT_DEPTH)      //rollout end condition.
             return true;
 
@@ -239,6 +238,7 @@ public class SingleTreeNode
                     bestValue = childValue;
                     selected = i;
                 }
+
             }
         }
 
@@ -270,6 +270,7 @@ public class SingleTreeNode
                     selected = i;
                 }
             }
+
         }
 
         if (selected == -1)
@@ -301,5 +302,4 @@ public class SingleTreeNode
             stObs.advance(action.next());
         }
     }
-
 }

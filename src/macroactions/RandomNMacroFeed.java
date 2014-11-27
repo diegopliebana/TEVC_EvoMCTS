@@ -1,4 +1,4 @@
-package MacroOLMCTS.macro;
+package macroactions;
 
 import java.util.Random;
 

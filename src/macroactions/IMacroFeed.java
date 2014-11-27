@@ -1,4 +1,4 @@
-package MacroOLMCTS.macro;
+package macroactions;
 
 /**
  * Created by dperez on 24/11/2014.
