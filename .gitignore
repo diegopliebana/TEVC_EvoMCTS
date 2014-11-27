@@ -1,3 +1,8 @@
 bin
 experiments - compiled  (non git)
 out
+.idea
+/TEVC_EvoMCTS.iml
+/build.xml
+/.project
+/TEVC_EvoMCTS.txt
