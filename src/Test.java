@@ -64,7 +64,7 @@ public class Test
 
         // 2. This plays a game in a level by the controller.
         //ArcadeMachine.runOneGame(game, level1, visuals, sampleMCTSController, recordActionsFile, seed);
-        ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
+        //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
 
@@ -94,7 +94,7 @@ public class Test
 
         //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed, filename);
         //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed, filename);
-        //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
+        Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
 
 
