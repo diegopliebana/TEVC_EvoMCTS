@@ -527,7 +527,7 @@ public abstract class Game
             view.paint(this.spriteGroups);
 
             //Update the frame title to reflect current score and tick.
-            frame.setTitle("Java-VGDL: Score:" + score + ". Tick:" + this.getGameTick());
+            frame.setTitle("Java-VGDL: Score:" + score + ". Tick:" + this.getGameTick() + ". Winner: " + this.getWinner());
         }
 
         return handleResult();
