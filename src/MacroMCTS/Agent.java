@@ -1,11 +1,10 @@
 package MacroMCTS;
 
-import core.game.Observation;
 import core.game.StateObservation;
 import core.player.AbstractPlayer;
-import macroactions.IMacroFeed;
+import macroactions.macroFeed.IMacroFeed;
 import macroactions.MacroAction;
-import macroactions.RandomNMacroFeed;
+import macroactions.macroFeed.RandomNMacroFeed;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -113,7 +112,9 @@ public class Agent extends AbstractPlayer {
         //Reset the tree if no current macroactions-action or it is finished.
         if(currentMacro == null || currentMacro.cursor==1)
         {
-            //Set the state observation object as the new root of the tree.
+            if(mctsPlayer.m_root != null)
+                setReward();
+
             //System.out.println("Creating a new tree...");
             setNewActions(stateObs.getAvailableActions());
             mctsPlayer.init(stateObs);
@@ -135,6 +136,14 @@ public class Agent extends AbstractPlayer {
         //... and return the next action.
         //System.out.println("Returning action index " + currentMacro.cursor + ": " + currentMacro.peek());
         return currentMacro.next();
+    }
+
+    public void setReward()
+    {
+        int act = mctsPlayer.m_root.mostVisitedAction();
+        SingleTreeNode bestChild = mctsPlayer.m_root.children[act];
+        double rw = bestChild.totValue / bestChild.nVisits;
+        macroFeed.setReward(rw);
     }
 
 }

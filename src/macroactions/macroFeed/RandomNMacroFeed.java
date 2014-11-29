@@ -1,4 +1,4 @@
-package macroactions;
+package macroactions.macroFeed;
 
 import java.util.Random;
 
@@ -25,5 +25,10 @@ public class RandomNMacroFeed implements IMacroFeed
     public int getNextLength() {
         int idx = mRnd.nextInt(macroLengths.length);
         return macroLengths[idx];
+    }
+
+    @Override
+    public void setReward(double reward) {
+        //No need for a reward in this feed.
     }
 }

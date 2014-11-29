@@ -1,10 +1,11 @@
 package core;
 
-import macroactions.ConstantMacroFeed;
+import macroactions.macroFeed.ConstantMacroFeed;
 import core.competition.CompetitionParameters;
 import core.game.Game;
 import core.game.StateObservation;
 import core.player.AbstractPlayer;
+import macroactions.macroFeed.IMacroFeed;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.StatSummary;
@@ -291,8 +292,8 @@ public class ArcadeMachine
         }
     }
 
-    public static void runGamesMacroN(String game_file, String level_file, int level_times, int[] macroActionLengths,
-                                      String agentName, boolean isFixed, String filename)
+    public static void runGamesMacroN(String game_file, String level_file, int level_times, IMacroFeed macroFeed,
+                                      int[] macroActionLengths, String agentName, boolean isFixed, String filename)
     {
         VGDLFactory.GetInstance().init(); //This always first thing to do.
         VGDLRegistry.GetInstance().init();
@@ -301,6 +302,8 @@ public class ArcadeMachine
 
         Game toPlay = new VGDLParser().parseGame(game_file);
         int numMacroActionLengths = macroActionLengths.length;
+        if(macroFeed != null)
+            numMacroActionLengths = 1;
 
         try {
             //Create output file
@@ -319,8 +322,13 @@ public class ArcadeMachine
                     int seed = new Random().nextInt();
                     AbstractPlayer player = ArcadeMachine.createPlayer(agentName, null, toPlay.getObservation(), seed);
 
+                    if(macroFeed == null)
+                        macroFeed = new ConstantMacroFeed(macroLength);
+
                     if (player instanceof MacroOLMCTS.Agent) {
-                        ((MacroOLMCTS.Agent) player).setNewActions(new ConstantMacroFeed(macroLength), toPlay.getObservation());
+                        ((MacroOLMCTS.Agent) player).setNewActions(macroFeed, toPlay.getObservation());
+                    }else if (player instanceof MacroMCTS.Agent) {
+                        ((MacroMCTS.Agent) player).setNewActions(macroFeed, toPlay.getObservation());
                     }
 
                     //Third, warm the game up.
@@ -606,7 +614,7 @@ public class ArcadeMachine
             player = (AbstractPlayer) controllerArgsConstructor.newInstance(constructorArgs);
 
             //Check if we returned on time, and act in consequence.
-            long timeTaken = ect.elapsedMillis();
+            /*long timeTaken = ect.elapsedMillis();
             if(ect.exceededMaxTime())
             {
                 long exceeded =  - ect.remainingTimeMillis();
@@ -618,7 +626,7 @@ public class ArcadeMachine
             else
             {
                 //System.out.println("Controller initialization time: " + timeTaken + " ms.");
-            }
+            }*/
 
         //This code can throw many exceptions (no time related):
 

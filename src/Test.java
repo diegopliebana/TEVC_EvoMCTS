@@ -1,4 +1,6 @@
 import core.ArcadeMachine;
+import macroactions.macroFeed.BanditMacroFeed;
+import macroactions.macroFeed.IMacroFeed;
 
 import java.util.Random;
 
@@ -55,7 +57,7 @@ public class Test
 
         //Game and level to play
 
-        int gameIdx = 3;
+        int gameIdx = 4;
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
         String level1 = gamesPath + games[gameIdx] + "_lvl" + levelIdx +".txt";
@@ -67,8 +69,8 @@ public class Test
         //ArcadeMachine.runOneGame(game, level1, visuals, sampleMCTSController, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
-        //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
-        ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
+        ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
+        //ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
 
         // 3. This replays a game from an action file previously recorded
         //String readActionsFile = "actionsFile_aliens_lvl0.txt";  //This example is for
@@ -148,6 +150,8 @@ public class Test
 
         int NGames = 20, NRepetitions = 100;
         int macroActionLengths[] = new int[]{1,2,3,5};
+        //IMacroFeed macroFeed = null; //This for several macro-action lengths.
+        IMacroFeed macroFeed = new BanditMacroFeed(new int[]{1,2,3,5});
 
         if(gameId == -1) {
             for (int i = 0; i < NGames; ++i) {
@@ -156,7 +160,7 @@ public class Test
                 String level = gamesPath + games[i] + "_lvl0.txt";
                 String filename = games[i] + "_lvl0_" + controller + ".txt";
 
-                ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroActionLengths, controller, false, filename);
+                ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroFeed, macroActionLengths, controller, false, filename);
             }
         }else
         {
@@ -164,7 +168,7 @@ public class Test
             String level = gamesPath + games[gameId] + "_lvl0.txt";
             String filename = games[gameId] + "_lvl0_" + controller + ".txt";
 
-            ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroActionLengths, controller, false, filename);
+            ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroFeed, macroActionLengths, controller, false, filename);
         }
 
     }
