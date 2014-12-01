@@ -55,8 +55,8 @@ public class SingleTreeNode extends TreeNode
     private static double rawScoreBeginRollout;
     private static double memScoreBeginRollout;
 
-    ArrayList<StateObservation> rolloutStates;
-    ArrayList<Integer> rolloutActions;
+    private static ArrayList<StateObservation> rolloutStates;
+    private static ArrayList<Integer> rolloutActions;
 
     private static StatSummary weightVectorFitness;
     private static double[] all_fitness;
@@ -171,7 +171,7 @@ public class SingleTreeNode extends TreeNode
             {
                 //This may happen when we choose not to update a fitness (i.e.: bandits).
                 //double normFit = Utils.normalise(averageFitness,HUGE_NEGATIVE,HUGE_POSITIVE);
-                source.returnFitness(rolloutStates, rolloutActions, averageFitness);
+                source.returnFitness(roller.getFeatures(), rolloutStates, rolloutActions, averageFitness);
             }
 
             //We might have found new features during the rollouts, update vector sizes.
@@ -319,12 +319,13 @@ public class SingleTreeNode extends TreeNode
         while (!finishRollout(rollerState,thisDepth)) {
 
             //System.out.println(rolloutStates.size());
-//rolloutStates.add(rollerState.copy());
 
             int action = roller.roll(rollerState);
             if(action >= 0)
             {
+                rolloutStates.add(rollerState.copy());
                 rolloutActions.add(action);
+
                 int prevEvCount = rollerState.getEventsHistory().size();
                 double scorePrev = rollerState.getGameScore();
 

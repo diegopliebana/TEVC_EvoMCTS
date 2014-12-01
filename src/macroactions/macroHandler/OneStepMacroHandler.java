@@ -47,7 +47,7 @@ public class OneStepMacroHandler extends MacroHandler
         setReward(agent.getReward());
 
         //System.out.println("Creating a new tree...");
-        setNewActions(stateObs.getAvailableActions());
+        setNewActions(agent.getAvailableActions());
 
         agent.init(stateObs);
 

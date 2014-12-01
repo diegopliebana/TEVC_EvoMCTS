@@ -38,6 +38,9 @@ public class Agent extends AbstractPlayer implements IMacroUser{
     public static int MACROACTION_LENGTH = 5;
     public static MacroAction[] actions;
 
+    public ArrayList<Types.ACTIONS> extendedActions;
+
+
     /**
      * Public constructor with state observation and time due.
      * @param so state observation of the current game.
@@ -56,17 +59,25 @@ public class Agent extends AbstractPlayer implements IMacroUser{
 
         //Determine the actions to use.
         ArrayList<Types.ACTIONS> act = so.getAvailableActions();
+        act.add(Types.ACTIONS.ACTION_NIL);
+        extendedActions = act;
+
         macroHandler.setNewActions(act);
 
         //Create the player.
         mctsPlayer = getPlayer(so, elapsedTimer);
     }
 
+    public ArrayList<Types.ACTIONS> getAvailableActions()
+    {
+        return extendedActions;
+    }
+
     public void setNewActions(IMacroFeed macroFeed, StateObservation so)
     {
         macroHandler.setMacroFeed(macroFeed);
         //this.setNewActions(so.getAvailableActions());
-        macroHandler.setNewActions(so.getAvailableActions());
+        macroHandler.setNewActions(this.getAvailableActions());
     }
 
 
@@ -115,6 +126,10 @@ public class Agent extends AbstractPlayer implements IMacroUser{
         {
             int act = mctsPlayer.m_root.mostVisitedAction();
             SingleTreeNode bestChild = mctsPlayer.m_root.children[act];
+            if(bestChild == null)
+            {
+                int a = 0;
+            }
             double rw = bestChild.totValue / bestChild.nVisits;
             return rw;
         }

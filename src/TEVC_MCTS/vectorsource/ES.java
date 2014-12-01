@@ -1,6 +1,7 @@
 package TEVC_MCTS.vectorsource;
 
 import TEVC_MCTS.Config;
+import TEVC_MCTS.features.NavFeatureSource;
 import TEVC_MCTS.utils.Memory;
 import core.game.StateObservation;
 
@@ -121,7 +122,7 @@ public class ES extends FitVectorSource
 
 
     @Override
-    public boolean returnFitness(ArrayList<StateObservation> states,
+    public boolean returnFitness(NavFeatureSource features, ArrayList<StateObservation> states,
                               ArrayList<Integer> actions,
                               double fitness) {
         nEvals++;

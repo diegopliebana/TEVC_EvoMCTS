@@ -1,8 +1,10 @@
 package TEVC_MCTS.vectorsource;
 
+import TEVC_MCTS.features.NavFeatureSource;
 import TEVC_MCTS.utils.Memory;
 import core.game.StateObservation;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -85,9 +87,23 @@ public class CMAES extends FitVectorSource{
     }
 
     @Override
-    public boolean returnFitness(ArrayList<StateObservation> states, ArrayList<Integer> actions, double fitnessVal) {
+    public boolean returnFitness(NavFeatureSource features, ArrayList<StateObservation> states, ArrayList<Integer> actions, double fitnessVal) {
         //fitnessVal is the fitness value for this weight vector.
         //States and actions are the sequence of states and actions found and used during the rollout.
+
+        int idx = 0;
+        for(StateObservation stObs : states)
+        {
+            //This is how you get the features of one of the states:
+            double[] stateFeatures = features.getFeatureVectorAsArray(stObs);
+            int action = actions.get(idx);
+
+
+
+            idx++;
+        }
+
+
 
 
 

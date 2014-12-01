@@ -32,7 +32,7 @@ public abstract class FitVectorSource {
 
     public abstract double[] getNext(String[] features);
 
-    public abstract boolean returnFitness(ArrayList<StateObservation> states,
+    public abstract boolean returnFitness(NavFeatureSource features, ArrayList<StateObservation> states,
                                        ArrayList<Integer> actions,
                                        double fitness);
 
