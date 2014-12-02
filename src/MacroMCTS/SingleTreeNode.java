@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class SingleTreeNode
 {
-    private static final double HUGE_NEGATIVE = -10000000.0;
-    private static final double HUGE_POSITIVE =  10000000.0;
+    public static final double HUGE_NEGATIVE = -10000000.0;
+    public static final double HUGE_POSITIVE =  10000000.0;
     public static double epsilon = 1e-6;
     public static double egreedyEpsilon = 0.05;
     public StateObservation state;

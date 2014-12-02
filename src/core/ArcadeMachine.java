@@ -6,6 +6,8 @@ import core.game.Game;
 import core.game.StateObservation;
 import core.player.AbstractPlayer;
 import macroactions.macroFeed.IMacroFeed;
+import macroactions.macroHandler.MacroHandler;
+import macroactions.macroHandler.NormalMacroHandler;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.StatSummary;
@@ -292,7 +294,7 @@ public class ArcadeMachine
         }
     }
 
-    public static void runGamesMacroN(String game_file, String level_file, int level_times, IMacroFeed macroFeed,
+    public static void runGamesMacroN(String game_file, String level_file, int level_times, MacroHandler macroHandler,
                                       int[] macroActionLengths, String agentName, boolean isFixed, String filename)
     {
         VGDLFactory.GetInstance().init(); //This always first thing to do.
@@ -302,7 +304,7 @@ public class ArcadeMachine
 
         Game toPlay = new VGDLParser().parseGame(game_file);
         int numMacroActionLengths = macroActionLengths.length;
-        if(macroFeed != null)
+        if(macroHandler != null)
             numMacroActionLengths = 1;
 
         try {
@@ -322,13 +324,13 @@ public class ArcadeMachine
                     int seed = new Random().nextInt();
                     AbstractPlayer player = ArcadeMachine.createPlayer(agentName, null, toPlay.getObservation(), seed);
 
-                    if(macroFeed == null)
-                        macroFeed = new ConstantMacroFeed(macroLength);
+                    if(macroHandler == null)
+                        macroHandler = new NormalMacroHandler(new ConstantMacroFeed(macroLength), null);
 
                     if (player instanceof MacroOLMCTS.Agent) {
-                        ((MacroOLMCTS.Agent) player).setNewActions(macroFeed, toPlay.getObservation());
+                        ((MacroOLMCTS.Agent) player).setNewActions(macroHandler, toPlay.getObservation());
                     }else if (player instanceof MacroMCTS.Agent) {
-                        ((MacroMCTS.Agent) player).setNewActions(macroFeed, toPlay.getObservation());
+                        ((MacroMCTS.Agent) player).setNewActions(macroHandler, toPlay.getObservation());
                     }
 
                     //Third, warm the game up.

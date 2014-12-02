@@ -35,7 +35,8 @@ public class BanditMacroFeed implements IMacroFeed
     }
 
     @Override
-    public int getNextLength() {       double bestValue = -Double.MAX_VALUE;
+    public int getNextLength() {
+        double bestValue = -Double.MAX_VALUE;
         lastSelectedIdx = -1;
         for(int i = 0; i < numBandits; ++i)
         {
@@ -54,6 +55,12 @@ public class BanditMacroFeed implements IMacroFeed
             }
         }
 
+        if(lastSelectedIdx == -1)
+        {
+            //Give it random
+            lastSelectedIdx = mRnd.nextInt(numBandits);
+        }
+
         return macroLengths[lastSelectedIdx];
 
     }
@@ -69,7 +76,7 @@ public class BanditMacroFeed implements IMacroFeed
         if(reward > bounds[1])
             bounds[1] = reward;
 
-        System.out.println("Last Tree with ML=" + macroLengths[lastSelectedIdx] + ", reward: " + reward +
-                           ", bounds: (" + bounds[0] + "," + bounds[1] + ")");
+        //System.out.println("Last Tree with ML=" + macroLengths[lastSelectedIdx] + ", reward: " + reward +
+        //                  ", bounds: (" + bounds[0] + "," + bounds[1] + ")");
     }
 }

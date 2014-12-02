@@ -7,6 +7,20 @@ from os.path import isfile, join
 import operator
 from matplotlib.pyplot import errorbar
 
+
+testOne = False
+doPdf = True
+#dataFilesPath = '../macroTests/bandit1235/'
+#numMacroLengths = 1
+#NumRepetitions = 100
+#macros = [1]
+
+dataFilesPath = '../macroTests/'
+numMacroLengths = 4
+NumRepetitions = 100
+macros = [1,2,3,5]
+
+
 def errorfill(x, y, yerr, color=None, alpha_fill=0.3, ax=None):
     ax = ax if ax is not None else plt.gca()
     if color is None:
@@ -37,9 +51,17 @@ def drawBars(avg, err, title, ylim, output_file):
     hatches = ['//',':',':','.']
     rects = [0 for x in range(numMacroLengths)]
     for i in range(numMacroLengths):
-        rects[i] = ax.bar(ind+width*i,avg[j][i],width,color=colors[i],yerr=err[j][i], edgecolor='black', hatch=hatches[i], ecolor='black')
+
+        val = 0
+        val_err = 0
+        if i < len(avg[j]):
+            val = avg[j][i]
+            val_err = err[j][i]
+
+        rects[i] = ax.bar(ind+width*i, val, width, color=colors[i], yerr=val_err, edgecolor='black', hatch=hatches[i], ecolor='black')
+
         height = rects[i][0].get_height()
-        text = '%.2f (%.2f)'%(avg[j][i],err[j][i])
+        text = '%.2f (%.2f)'%(val,val_err)
         plt.text(rects[i][0].get_x()+rects[i][0].get_width()/2., 1.05*height, text, ha='center', va='bottom')
         #print allWinAverages[j][i]
 
@@ -59,7 +81,7 @@ def drawBars(avg, err, title, ylim, output_file):
 
     if testOne:
         plt.show()
-    else:
+    elif doPdf:
         fig.savefig(output_file)
 
 
@@ -67,20 +89,15 @@ def drawBars(avg, err, title, ylim, output_file):
 
 ###-- FOLDER: leftRight
 
-testOne = False
 
-mypath = '../someResults/'
 
 if testOne:
     filenames = ['eggomania_lvl0_MacroOLMCTS.Agent.txt']
 else:
-    filenames = [ f for f in listdir(mypath) if (isfile(join(mypath,f)) and (not f.startswith('.')) ) ]
+    filenames = [ f for f in listdir(dataFilesPath) if (isfile(join(dataFilesPath,f)) and (not f.startswith('.')) ) ]
 
 ###-- User config section --###
 
-numMacroLengths = 4
-NumRepetitions = 100
-macros = [1,2,3,5]
 TotGames = numMacroLengths * NumRepetitions
 
 #Init memory structures
@@ -90,14 +107,16 @@ std_devs = [[] for x in xrange(len(filenames))]
 std_errs = [[] for x in xrange(len(filenames))]
 games = []
 
+totalWins = []
+
 allWinAverages = [[] for x in xrange(len(filenames))] #[0] * len(filenames)
 allTimeStepsAverages = [[] for x in xrange(len(filenames))]
 allScoresAverages = [[] for x in xrange(len(filenames))]
 
 
 allWinStdErr = [[] for x in xrange(len(filenames))] #[0] * len(filenames)
-allTimeStepsStdErr = [[] for x in xrange(len(filenames))]
 allScoresStdErr = [[] for x in xrange(len(filenames))]
+allTimeStepsStdErr = [[] for x in xrange(len(filenames))]
 
 for j in xrange(len(filenames)):
 
@@ -106,7 +125,7 @@ for j in xrange(len(filenames)):
     p = filename.index("_")
     games.append(filename[0:p])
 
-    datafile = '../someResults/' + filename
+    datafile = dataFilesPath + filename
 
     print 'loading', datafile
     r = pylab.loadtxt(datafile, comments='#', delimiter=',')
@@ -129,7 +148,10 @@ for j in xrange(len(filenames)):
 
             victories[macroL].append(vict)
             scores[macroL].append(score)
-            timeSteps[macroL].append(timeS)
+            if vict == 1:
+                timeSteps[macroL].append(timeS)
+
+            totalWins.append(vict)
 
             nRow+=1
 
@@ -141,48 +163,19 @@ for j in xrange(len(filenames)):
             allScoresAverages[j].append(np.average(scores[k]))
             allScoresStdErr[j].append(np.std(scores[k]) / np.sqrt(len(scores[k])))
 
-            allTimeStepsAverages[j].append(np.average(timeSteps[k]))
+            if len(timeSteps[k]) > 0:
+                allTimeStepsAverages[j].append(np.average(timeSteps[k]))
+                allTimeStepsStdErr[j].append(np.std(timeSteps[k]) / np.sqrt(len(timeSteps[k])))
+            else:
+                allTimeStepsAverages[j].append(0)
+                allTimeStepsStdErr[j].append(0)
 
 
 
-        drawBars(allWinAverages, allWinStdErr, 'Average of victories', [0,1.5], "../someResults/out/"+games[j]+"_ratewin.pdf")
-        drawBars(allScoresAverages, allScoresStdErr, 'Average of score', None, "../someResults/out/"+games[j]+"_score.pdf")
+        drawBars(allWinAverages, allWinStdErr, 'Average of victories', [0,1.5], dataFilesPath+"out/"+games[j]+"_ratewin.pdf")
+        drawBars(allScoresAverages, allScoresStdErr, 'Average of score', None, dataFilesPath+"out/"+games[j]+"_score.pdf")
+        drawBars(allTimeStepsAverages, allTimeStepsStdErr, 'Average of time steps', None, dataFilesPath+"out/"+games[j]+"_timesSteps.pdf")
 
-        # #Create a figure
-        # fig = pylab.figure()
-        #
-        # #Add a subplot (Grid of plots 1x1, adding plot 1)
-        # ax = fig.add_subplot(111)
-        #
-        # ind = np.arange(1)
-        # width = 0.2
-        # colors = ['w','grey','w','black']
-        # hatches = ['//',':',':','.']
-        # rects = [0 for x in range(numMacroLengths)]
-        # for i in range(numMacroLengths):
-        #     #rects[i] = ax.bar(ind+width*i,allWinAverages[j][i],width,color=colors[i],yerr=err_plot[i], edgecolor='black', hatch=hatches[i], ecolor='black')
-        #     rects[i] = ax.bar(ind+width*i,allWinAverages[j][i],width,color=colors[i],yerr=allWinStdErr[j][i], edgecolor='black', hatch=hatches[i], ecolor='black')
-        #     height = rects[i][0].get_height()
-        #     text = '%.2f (%.2f)'%(allWinAverages[j][i],allWinStdErr[j][i])
-        #     plt.text(rects[i][0].get_x()+rects[i][0].get_width()/2., 1.1*height, text, ha='center', va='bottom')
-        #     #print allWinAverages[j][i]
-        #
-        # ax.set_xticks(ind+width*2)
-        # maps_txt = [games[j]]
-        # ax.set_xticklabels(maps_txt)
-        #
-        #
-        # plt.legend(macros,  shadow=True, fancybox=True, loc=1)
-        #
-        # #Titles and labels
-        # plt.title('Average of victories')
-        # plt.xlabel("Macro-action length")
-        # plt.ylabel("Average")
-        #
-        # plt.ylim([0,1.5])
-        #
-        # if testOne:
-        #     plt.show()
-        # else:
-        #     fig.savefig("../someResults/out/"+games[j]+".pdf")
 
+text = 'Total wins average: %.2f (%.2f)'%(np.average(totalWins),np.std(totalWins) / np.sqrt(len(totalWins)))
+print text

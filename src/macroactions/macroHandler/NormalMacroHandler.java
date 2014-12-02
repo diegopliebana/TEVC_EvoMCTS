@@ -38,7 +38,8 @@ public class NormalMacroHandler extends MacroHandler {
         //Reset the tree if no current macroactions-action or it is finished.
         if(currentMacro == null || currentMacro.cursor==1)
         {
-            setReward(agent.getReward());
+            if(currentMacro != null) //if (currentMacro == null) we haven't even started, can't pollute with an invalid reward.
+                setReward(agent.getReward());
 
             //System.out.println("Creating a new tree...");
             setNewActions(agent.getAvailableActions());

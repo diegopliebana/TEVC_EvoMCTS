@@ -1,6 +1,8 @@
 import core.ArcadeMachine;
 import macroactions.macroFeed.BanditMacroFeed;
 import macroactions.macroFeed.IMacroFeed;
+import macroactions.macroHandler.MacroHandler;
+import macroactions.macroHandler.OneStepMacroHandler;
 
 import java.util.Random;
 
@@ -57,7 +59,7 @@ public class Test
 
         //Game and level to play
 
-        int gameIdx = 21;
+        int gameIdx = 4;
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
         String level1 = gamesPath + games[gameIdx] + "_lvl" + levelIdx +".txt";
@@ -95,8 +97,8 @@ public class Test
         //ArcadeMachine.runGamesN(game, level1, M, RL, sampleMCTSController, isFixedTest, seed, filename);
         //ArcadeMachine.runGamesN(game, level1, M, RL, controller, isFixedTest, seed, filename);
 
-        RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed, filename);
-        //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed, filename);
+        //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed, filename);
+        Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed, filename);
         //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
 
@@ -149,9 +151,13 @@ public class Test
         }
 
         int NGames = 20, NRepetitions = 100;
-        int macroActionLengths[] = new int[]{1,2,3,5};
+        int macroActionLengths[] = new int[]{0};// = new int[]{1,2,3,5};
         //IMacroFeed macroFeed = null; //This for several macro-action lengths.
-        IMacroFeed macroFeed = new BanditMacroFeed(new int[]{1,2,3,5});
+        //IMacroFeed macroFeed = new BanditMacroFeed(new int[]{1,2,3,5});
+
+        //MacroHandler mh = new OneStepMacroHandler(new BanditMacroFeed(new int[]{1,2,3,5}), null);
+        MacroHandler mh = new OneStepMacroHandler(new BanditMacroFeed(new int[]{1,2,3,5}), null);
+
 
         if(gameId == -1) {
             for (int i = 0; i < NGames; ++i) {
@@ -160,7 +166,7 @@ public class Test
                 String level = gamesPath + games[i] + "_lvl0.txt";
                 String filename = games[i] + "_lvl0_" + controller + ".txt";
 
-                ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroFeed, macroActionLengths, controller, false, filename);
+                ArcadeMachine.runGamesMacroN(game, level, NRepetitions, mh, macroActionLengths, controller, false, filename);
             }
         }else
         {
@@ -168,7 +174,7 @@ public class Test
             String level = gamesPath + games[gameId] + "_lvl0.txt";
             String filename = games[gameId] + "_lvl0_" + controller + ".txt";
 
-            ArcadeMachine.runGamesMacroN(game, level, NRepetitions, macroFeed, macroActionLengths, controller, false, filename);
+            ArcadeMachine.runGamesMacroN(game, level, NRepetitions, mh, macroActionLengths, controller, false, filename);
         }
 
     }
@@ -205,7 +211,7 @@ public class Test
         //int RLmax = 8;
 
         int M = 1000;   //number of repeats (only for statistical accuracy)
-        int[] RL = new int[]{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100};
+        int[] RL = new int[]{40,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100};
 
         boolean isFixedTest = false;
         ArcadeMachine.runGamesN(game, level1, M, RL, controller, isFixedTest, seed, filename);
