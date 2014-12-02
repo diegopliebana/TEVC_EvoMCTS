@@ -52,7 +52,7 @@ public class Test
         int seed = new Random().nextInt();
         //System.out.println("Seed = " + seed);
         String wkDir = System.getProperty("user.dir");
-        String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".csv";
+        String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + "TD.csv";
         //String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".txt";
 
         //Game and level to play
@@ -185,7 +185,7 @@ public class Test
         //int RLmax = 8;
 
         int M = 1000;   //number of repeats (only for statistical accuracy)
-        int RLmin = 1;     //rollout lenghts to be tested from RLmin to RLmax, where RLmin >= 1
+        int RLmin = 30;     //rollout lenghts to be tested from RLmin to RLmax, where RLmin >= 1
         int RLmax = 50;
 
         boolean isFixedTest = false;
@@ -205,7 +205,7 @@ public class Test
         //int RLmax = 8;
 
         int M = 1000;   //number of repeats (only for statistical accuracy)
-        int[] RL = new int[]{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100};
+        int[] RL = new int[]{100};
 
         boolean isFixedTest = false;
         ArcadeMachine.runGamesN(game, level1, M, RL, controller, isFixedTest, seed, filename);
