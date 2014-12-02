@@ -40,7 +40,7 @@ public class Config {
     public static int BANDIT = 3;
     public static int TD = 4;
     public static int CMAES = 5;
-    public static int ES_TYPE = HAND_TUNED_WEIGHTS;
+    public static int ES_TYPE = TD;
 
     //FEATURES:
     public static int GVG_FEATURES = 0;
@@ -49,7 +49,7 @@ public class Config {
     public static int BOULDERDASH_FEATURES = 3;
     public static int CIRCLE_FEATURES = 4;
     public static int LEFTRIGHT_FEATURES = 5;
-    public static int FEATURES = CHASE_FEATURES;
+    public static int FEATURES = LEFTRIGHT_FEATURES;
     //public static int FEATURES = CIRCLE_FEATURES;
     //public static int FEATURES = LEFTRIGHT_FEATURES;
 

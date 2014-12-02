@@ -1,5 +1,6 @@
 package TEVC_MCTS.vectorsource;
 
+import TEVC_MCTS.features.NavFeatureSource;
 import TEVC_MCTS.utils.Memory;
 import core.game.StateObservation;
 import tools.Utils;
@@ -112,7 +113,7 @@ public class Bandit extends FitVectorSource{
     }
 
     @Override
-    public boolean returnFitness(ArrayList<StateObservation> states, ArrayList<Integer> actions, double fitnessVal) {
+    public boolean returnFitness(NavFeatureSource features, ArrayList<StateObservation> states, ArrayList<Integer> actions, double fitnessVal) {
         fitness[lastSelected] += fitnessVal;
         bigN++;
         n[lastSelected]++;
