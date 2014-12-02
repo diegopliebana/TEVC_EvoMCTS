@@ -115,9 +115,9 @@ public class TD extends FitVectorSource{
         //States and actions are the sequence of states and actions found and used during the rollout.
 
 
-       if(fitnessVal == 0.0){
-            return false;
-        }
+//       if(fitnessVal == 0.0){
+//            return false;
+//        }
         if(fitnessVal!=Double.NEGATIVE_INFINITY)   {
 
         this.reward_max = Math.max(fitnessVal, this.reward_max);
