@@ -53,6 +53,7 @@ public class LeftRightFeatures extends NavFeatureSource
     public LinkedHashMap<String, Double> getFeatureVector()
     {
         LinkedHashMap<String, Double> features = new LinkedHashMap<String, Double>();
+        features.put("bias:1", 1.0);
         features.put("win:"+WIN, distanceToWin);
         //features.put("lose:"+LOSE, distanceToLose);
         return features;
@@ -112,11 +113,12 @@ public class LeftRightFeatures extends NavFeatureSource
     public double[] getHandTunedWeights(StateObservation stateObs) {
         //2 actions, 2 features  (distance to win, distance to lose)
         //return new double[]{1,-1,1,-1,1,-1,1,-1};
-        double left = -1;
-        double right = 1;
+        double left = -10;
+        double right = 10;
+        double bias = 0;
 
         //return new double[]{left, left, right, right};
-        return new double[]{left, right};
+        return new double[]{bias, bias, left, right};
     }
 
 

@@ -24,7 +24,7 @@ public class Config {
     public static int INDIVIDUAL_ITERATIONS = 1;
     public static int ROLLOUT_DEPTH = 10;
     public static double K = Math.sqrt(2);
-    public static double REWARD_DISCOUNT = 1; //value of 1.0 equals to no discount
+    public static double REWARD_DISCOUNT = 0.9; //value of 1.0 equals to no discount
     public static double REWARD_STEP_PENALTY = 0; //defines received reward after each step/action; set to < 0.0 to minimize total number of steps
 
     public static boolean OPTIMAL_PLAY_ENABLED = false;
@@ -40,7 +40,7 @@ public class Config {
     public static int BANDIT = 3;
     public static int TD = 4;
     public static int CMAES = 5;
-    public static int ES_TYPE = HAND_TUNED_WEIGHTS;
+    public static int ES_TYPE = ONE_PLUS_ONE;
 
     //FEATURES:
     public static int GVG_FEATURES = 0;
@@ -49,7 +49,7 @@ public class Config {
     public static int BOULDERDASH_FEATURES = 3;
     public static int CIRCLE_FEATURES = 4;
     public static int LEFTRIGHT_FEATURES = 5;
-    public static int FEATURES = CHASE_FEATURES;
+    public static int FEATURES = LEFTRIGHT_FEATURES;
     //public static int FEATURES = CIRCLE_FEATURES;
     //public static int FEATURES = LEFTRIGHT_FEATURES;
 

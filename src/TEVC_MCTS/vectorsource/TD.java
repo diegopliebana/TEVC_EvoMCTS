@@ -159,7 +159,7 @@ public class TD extends FitVectorSource{
             double error = prediction - normalised_reward;
 
 //
-            StringBuffer buffer = new StringBuffer();
+            /*StringBuffer buffer = new StringBuffer();
             buffer.append("Error = ");
             buffer.append(error);
             buffer.append(", ");
@@ -183,7 +183,7 @@ public class TD extends FitVectorSource{
                buffer.append(Q_values[i][action]);
                buffer.append(", ");
 
-            }
+            }*/
             //System.out.println(buffer);
 
             for (int i = 0; i < stateFeatures.length; i++) {

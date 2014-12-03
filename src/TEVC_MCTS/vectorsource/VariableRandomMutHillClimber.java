@@ -16,7 +16,13 @@ import java.util.Random;
 public class VariableRandomMutHillClimber extends FitVectorSource
 {
     double noiseDev = 0.1;
-    static double noiseFac = 1.02;
+    static double noiseFac = 1.5;
+    static double oneFifthRule = Math.pow(noiseFac,0.25);
+
+    //Following 1-5th rule: https://hal.inria.fr/inria-00430515/file/wk2037-auger.pdf
+    //No restarts nor stopping criteria implemented: short evolutions, linear approximation (well behaved),
+    //harder to hit local minimum, and need to restart
+
 
     Memory memory;
 
@@ -65,7 +71,8 @@ public class VariableRandomMutHillClimber extends FitVectorSource
         } else {
             //System.out.println("No new best fitness: " + fitness + ", best still: " + bestScore);
             // failure so decrease noiseDev
-            noiseDev /= noiseFac;
+            //noiseDev /= noiseFac;
+            noiseDev /= oneFifthRule;
         }
         return success;
     }

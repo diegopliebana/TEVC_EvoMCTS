@@ -57,6 +57,7 @@ public class ChaseFeatures extends NavFeatureSource
     public LinkedHashMap<String, Double> getFeatureVector()
     {
         LinkedHashMap<String, Double> features = new LinkedHashMap<String, Double>();
+        features.put("bias:1", 1.0);
         features.put("up_down_angry:"+ANGRY, up_down_angry);
         features.put("left_right_angry:"+ANGRY, left_right_angry);
         features.put("up_down_scared:"+SCARED, up_down_scared);
@@ -171,9 +172,11 @@ public class ChaseFeatures extends NavFeatureSource
         //Four actions, 2 features  (distance to angry, distance to scared)
         //These are constant because it is always good to increase distance with
         //angry goats and decrease it with scared ones.
+        double bias = 0;
 
         //actions order: left, right, down, up
-        return new double[]{ 0, -2, 0, 1,
+        return new double[]{ bias, bias, bias, bias,
+                             0, -2, 0, 1,
                              0, 2, 0, -1,
                              2,0, -1, 0,
                              -2, 0, 1,0};
