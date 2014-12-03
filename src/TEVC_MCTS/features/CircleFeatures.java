@@ -32,6 +32,7 @@ public class CircleFeatures extends NavFeatureSource
 
     private double distanceToWin;
     private double distanceToLose;
+    private double distanceFromCentre;
 
     protected ArrayList<Observation> grid[][];
     protected int block_size;
@@ -54,7 +55,8 @@ public class CircleFeatures extends NavFeatureSource
     {
         LinkedHashMap<String, Double> features = new LinkedHashMap<String, Double>();
         features.put("bias:1", 1.0);
-        features.put("angry:"+WIN, distanceToWin);
+        features.put("angry:"+WIN, distanceFromCentre);
+        //features.put("angry:"+WIN, distanceToWin);
         //features.put("scared:"+LOSE, distanceToLose);
         return features;
     }
@@ -70,6 +72,7 @@ public class CircleFeatures extends NavFeatureSource
         ArrayList<Observation>[] portalPositions = stateObs.getPortalsPositions(avatarPos);
         distanceToWin = -1;
         distanceToLose = -1;
+        distanceFromCentre = 0;
 
         if(portalPositions != null)
         {
@@ -82,6 +85,7 @@ public class CircleFeatures extends NavFeatureSource
                     {
                         //distanceToWin = maxDist - avatarPos.dist(closestObs.position);
                         distanceToWin =  1 - (avatarPos.dist(closestObs.position)/maxDist);
+                        distanceFromCentre = (0.5 - distanceToWin)*2.0;
                     }else if(closestObs.itype == LOSE)
                     {
                         distanceToLose =  1 - (avatarPos.dist(closestObs.position)/maxDist);
@@ -133,26 +137,39 @@ public class CircleFeatures extends NavFeatureSource
         //Four actions, 2 features  (distance to win, distance to lose)
         //return new double[]{1,-1,1,-1,1,-1,1,-1};
 
-        double left = -1;
-        double up = 1;
-        double right = 1, down = -1;
-        double bias = 0;
+//        double left = -1;
+//        double up = 1;
+//        double right = 1, down = -1;
+//        double bias = 0;
+//
+//        Vector2d avatarPos = stateObs.getAvatarPosition();
+//
+//        if(avatarPos.x > 700)
+//        {
+//            //right edge
+//            right = -1;
+//        }
+//        if(avatarPos.y < 50)
+//        {
+//            //upper edge
+//            up = -1;
+//        }
+//
+//        //return new double[]{left, left, right, right, down, down,up,up};
+//        return new double[]{bias, left, bias, right, bias, down, bias, up};
 
-        Vector2d avatarPos = stateObs.getAvatarPosition();
+        double biasUp = 10;
+        double biasRight = 10;
+        double biasDown = -10;
+        double biasLeft = -10;
+        double feature = 0;
 
-        if(avatarPos.x > 700)
-        {
-            //right edge
-            right = -1;
-        }
-        if(avatarPos.y < 50)
-        {
-            //upper edge
-            up = -1;
-        }
-
-        //return new double[]{left, left, right, right, down, down,up,up};
-        return new double[]{bias, bias, bias, bias, left,right,down,up};
+        return new double[]{
+                biasLeft, feature,
+                biasRight, feature,
+                biasDown, feature,
+                biasUp, feature
+        };
     }
 
 

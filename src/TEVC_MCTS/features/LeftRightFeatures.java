@@ -32,6 +32,7 @@ public class LeftRightFeatures extends NavFeatureSource
 
     private double distanceToWin;
     private double distanceToLose;
+    private double distanceFromCentre;
 
     protected ArrayList<Observation> grid[][];
     protected int block_size;
@@ -54,7 +55,8 @@ public class LeftRightFeatures extends NavFeatureSource
     {
         LinkedHashMap<String, Double> features = new LinkedHashMap<String, Double>();
         features.put("bias:1", 1.0);
-        features.put("win:"+WIN, distanceToWin);
+        features.put("win:"+WIN, distanceFromCentre);
+        //features.put("win:"+WIN, distanceToWin);
         //features.put("lose:"+LOSE, distanceToLose);
         return features;
     }
@@ -70,6 +72,7 @@ public class LeftRightFeatures extends NavFeatureSource
         ArrayList<Observation>[] portalPositions = stateObs.getPortalsPositions(avatarPos);
         distanceToWin = -1;
         distanceToLose = -1;
+        distanceFromCentre = 0;
 
         if(portalPositions != null)
         {
@@ -81,6 +84,7 @@ public class LeftRightFeatures extends NavFeatureSource
                     if(closestObs.itype == WIN)
                     {
                         distanceToWin =  1 - (avatarPos.dist(closestObs.position)/maxDist); //maxDist - avatarPos.dist(closestObs.position);
+                        distanceFromCentre = (0.5 - distanceToWin)*2.0;
                     }else if(closestObs.itype == LOSE)
                     {
                         distanceToLose =  1 - (avatarPos.dist(closestObs.position)/maxDist); // maxDist - avatarPos.dist(closestObs.position);
@@ -113,12 +117,15 @@ public class LeftRightFeatures extends NavFeatureSource
     public double[] getHandTunedWeights(StateObservation stateObs) {
         //2 actions, 2 features  (distance to win, distance to lose)
         //return new double[]{1,-1,1,-1,1,-1,1,-1};
-        double left = -10;
-        double right = 10;
-        double bias = 0;
+        double biasLeft = -10;
+        double biasRight = 10;
+        double feature = 0;
 
         //return new double[]{left, left, right, right};
-        return new double[]{bias, bias, left, right};
+        return new double[]{
+                biasLeft,  feature,
+                biasRight, feature
+        };
     }
 
 

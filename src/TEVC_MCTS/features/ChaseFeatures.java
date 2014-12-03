@@ -175,11 +175,12 @@ public class ChaseFeatures extends NavFeatureSource
         double bias = 0;
 
         //actions order: left, right, down, up
-        return new double[]{ bias, bias, bias, bias,
-                             0, -2, 0, 1,
-                             0, 2, 0, -1,
-                             2,0, -1, 0,
-                             -2, 0, 1,0};
+        return new double[]{
+                bias,  0, -2,  0,  1,
+                bias,  0,  2,  0, -1,
+                bias,  2,  0, -1,  0,
+                bias, -2,  0,  1,  0
+        };
 //        return new double[]{
 //                0, 0, 0, 0,
 //                0, 0, 0, 0,
