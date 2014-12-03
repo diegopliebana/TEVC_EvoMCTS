@@ -32,7 +32,8 @@ mergeFiles = []         #don't merge any
 
 #filenames = ['2014_11_16 rl01-50 sampleMCTS d1.00','2014_11_16 rl01-50 sampleMCTS d0.99','2014_11_16 rl01-50 sampleMCTS d0.95','2014_11_16 rl01-50 sampleMCTS d0.90','2014_11_16 rl01-50 sampleMCTS d0.80','2014_11_16 rl01-50 sampleMCTS d0.50','2014_11_16 rl01-50 sampleMCTS d0.10','2014_11_16 rl01-50 sampleMCTS d0.01']
 #filenames = ['2014_11_16 rl01-50 FEMCTS uone d1.00','2014_11_16 rl01-50 FEMCTS uone d0.99','2014_11_16 rl01-50 FEMCTS uone d0.95','2014_11_16 rl01-50 FEMCTS uone d0.90','2014_11_16 rl01-50 FEMCTS uone d0.80','2014_11_16 rl01-50 FEMCTS uone d0.50','2014_11_16 rl01-50 FEMCTS uone d0.10','2014_11_16 rl01-50 FEMCTS uone d0.01']
-filenames = ['2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100']
+#filenames = ['2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
+filenames = ['2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
 
 #filenames = ['2014_11_04 sampleMCTS','2014_11_04 sampleMCTS (1-8)','2014_11_16 rl01-50 d0.90 sampleMCTS']; mergeFiles = [[0,1]]
 #filenames = ['2014_11_04 TEVCMCTS handtuned','2014_11_04 TEVCMCTS handtuned (1-8)','2014_11_16 rl01-50 d0.90 FEMCTS hand']; mergeFiles = [[0,1]]
