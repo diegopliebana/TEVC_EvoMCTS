@@ -149,6 +149,18 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
         return action;
     }*/
 
+
+    /*
+    def softmax2(self, w):
+        w = np.array(w)
+        maxes = np.amax(w, axis=0)
+        #maxes = maxes.reshape(maxes.shape[0], 0)
+        e = np.exp(w - maxes)
+        dist = e / np.sum(e, axis=0)
+
+        return dist
+    */
+
     public double[] getBiases (StateObservation gameState) {
         double[] biases = new double[bias.length];
         // uniform = true;

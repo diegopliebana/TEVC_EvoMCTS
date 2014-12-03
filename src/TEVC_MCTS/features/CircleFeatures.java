@@ -53,6 +53,7 @@ public class CircleFeatures extends NavFeatureSource
     public LinkedHashMap<String, Double> getFeatureVector()
     {
         LinkedHashMap<String, Double> features = new LinkedHashMap<String, Double>();
+        features.put("bias:1", 1.0);
         features.put("angry:"+WIN, distanceToWin);
         //features.put("scared:"+LOSE, distanceToLose);
         return features;
@@ -135,6 +136,7 @@ public class CircleFeatures extends NavFeatureSource
         double left = -1;
         double up = 1;
         double right = 1, down = -1;
+        double bias = 0;
 
         Vector2d avatarPos = stateObs.getAvatarPosition();
 
@@ -150,7 +152,7 @@ public class CircleFeatures extends NavFeatureSource
         }
 
         //return new double[]{left, left, right, right, down, down,up,up};
-        return new double[]{left,right,down,up};
+        return new double[]{bias, bias, bias, bias, left,right,down,up};
     }
 
 

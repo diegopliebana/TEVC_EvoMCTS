@@ -43,16 +43,17 @@ public class OneStepMacroHandler extends MacroHandler
             //System.out.println("Advancing game state from " + curpos + " to " + stateObs.getGameTick());
         }
 
-        //We ALWAYS reset the tree.
-        setReward(agent.getReward());
+        if(currentMacro != null) //if (currentMacro == null) we haven't even started, can't pollute with an invalid reward.
+            setReward(agent.getReward());
 
         //System.out.println("Creating a new tree...");
         setNewActions(agent.getAvailableActions());
 
+        //We ALWAYS reset the tree.
         agent.init(stateObs);
 
         //Run MCTS for another cycle
-        System.out.println("Executing tree from " + stateObs.getGameTick() + ", MAC_LENGTH: " + MACROACTION_LENGTH);
+        //System.out.println("Executing tree from " + stateObs.getGameTick() + ", MAC_LENGTH: " + MACROACTION_LENGTH);
 
         int action = agent.run(elapsedTimer);
 
@@ -66,11 +67,11 @@ public class OneStepMacroHandler extends MacroHandler
             currentMacro.reset();
             this.resetBest();
             //System.out.println("New macroactions-action set:");
-            currentMacro.print();
+            //currentMacro.print();
         }
 
         //... and return the next action.
-        System.out.println("Returning action index " + currentMacro.cursor + ": " + currentMacro.peek());
+        //System.out.println("Returning action index " + currentMacro.cursor + ": " + currentMacro.peek());
         return currentMacro.next();
     }
 

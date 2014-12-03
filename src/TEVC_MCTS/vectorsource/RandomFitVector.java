@@ -51,6 +51,7 @@ public class RandomFitVector extends FitVectorSource
                               ArrayList<Integer> actions,
                               double fitness) {
         //Nothing to do here.
+        System.out.println(fitness);
         return false;
     }
 

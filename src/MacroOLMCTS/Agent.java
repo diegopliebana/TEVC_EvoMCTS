@@ -54,8 +54,8 @@ public class Agent extends AbstractPlayer implements IMacroUser{
         //macroHandler = new NormalMacroHandler(new ConstantMacroFeed(3), this);
         //macroHandler = new NormalMacroHandler(new RandomNMacroFeed(4), this);
 
-        //macroHandler = new OneStepMacroHandler(new BanditMacroFeed(new int[]{1,2,3,5}), this);
-        macroHandler = new OneStepMacroHandler(new RandomNMacroFeed(4), this);
+        macroHandler = new OneStepMacroHandler(new BanditMacroFeed(new int[]{1,2,3,5}), this);
+        //macroHandler = new OneStepMacroHandler(new RandomNMacroFeed(4), this);
 
         //Determine the actions to use.
         ArrayList<Types.ACTIONS> act = so.getAvailableActions();
@@ -73,11 +73,18 @@ public class Agent extends AbstractPlayer implements IMacroUser{
         return extendedActions;
     }
 
-    public void setNewActions(IMacroFeed macroFeed, StateObservation so)
+    public void setNewActions(MacroHandler macroHandler, StateObservation so)
     {
-        macroHandler.setMacroFeed(macroFeed);
-        //this.setNewActions(so.getAvailableActions());
-        macroHandler.setNewActions(this.getAvailableActions());
+        this.macroHandler = macroHandler;//
+        this.macroHandler.agent = this;
+        //macroHandler = new OneStepMacroHandler(new RandomNMacroFeed(4), this);
+
+        //Determine the actions to use.
+        ArrayList<Types.ACTIONS> act = so.getAvailableActions();
+        act.add(Types.ACTIONS.ACTION_NIL);
+        extendedActions = act;
+
+        macroHandler.setNewActions(act);
     }
 
 
@@ -124,15 +131,21 @@ public class Agent extends AbstractPlayer implements IMacroUser{
     {
         if(mctsPlayer.m_root != null)
         {
+            if(mctsPlayer.m_root.rootState.isGameOver())
+            {
+                if(mctsPlayer.m_root.rootState.getGameWinner() == Types.WINNER.PLAYER_WINS)
+                    return SingleTreeNode.HUGE_POSITIVE;
+                else
+                    return SingleTreeNode.HUGE_NEGATIVE;
+            }
+
             int act = mctsPlayer.m_root.mostVisitedAction();
             SingleTreeNode bestChild = mctsPlayer.m_root.children[act];
-            if(bestChild == null)
-            {
-                int a = 0;
-            }
-            double rw = bestChild.totValue / bestChild.nVisits;
+            //double rw = bestChild.totValue / bestChild.nVisits;
+            double rw = bestChild.nVisits;
             return rw;
         }
+
         return -Double.MAX_VALUE; //TODO: this might cause problems?
     }
 
