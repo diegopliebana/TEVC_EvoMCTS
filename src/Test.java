@@ -97,8 +97,8 @@ public class Test
         //ArcadeMachine.runGamesN(game, level1, M, RL, sampleMCTSController, isFixedTest, seed, filename);
         //ArcadeMachine.runGamesN(game, level1, M, RL, controller, isFixedTest, seed, filename);
 
-        RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed, filename);
-        //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed, filename);
+        RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed);
+        //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
 
@@ -179,7 +179,10 @@ public class Test
 
     }
 
-    public static void RightLeft_2014_11_20(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed, String filename){
+    public static void RightLeft_2014_11_20(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed){
+
+        String wkDir = System.getProperty("user.dir");
+        String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".csv";
 
         int gameIdx = 21;
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
@@ -192,14 +195,17 @@ public class Test
 
         int M = 1000;   //number of repeats (only for statistical accuracy)
         int RLmin = 1;     //rollout lenghts to be tested from RLmin to RLmax, where RLmin >= 1
-        int RLmax = 50;
+        int RLmax = 20;
 
         boolean isFixedTest = false;
         ArcadeMachine.runGamesN(game, level1, M, RLmin, RLmax, controller, isFixedTest, seed, filename);
         //ArcadeMachine.runGamesN(game, level1, M, RLmin, RLmax, sampleMCTSController, isFixedTest, seed, filename);
     }
 
-    public static void Circle_2014_11_21(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed, String filename){
+    public static void Circle_2014_11_21(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed){
+
+        String wkDir = System.getProperty("user.dir");
+        String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".csv";
 
         int gameIdx = 20;
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
