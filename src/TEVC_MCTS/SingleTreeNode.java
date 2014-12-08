@@ -155,6 +155,9 @@ public class SingleTreeNode extends TreeNode
 
             StatSummary averageReward = new StatSummary();
 
+            //output rollout weights
+            //((VariableFeatureWeightedRoller)roller).params[0];
+
             while(iterations < Config.INDIVIDUAL_ITERATIONS)
             {
                 iterations++;
@@ -185,6 +188,11 @@ public class SingleTreeNode extends TreeNode
             avgTimeTaken  = acumTimeTaken/numIndividuals;
 
         }
+
+//        System.out.format("\n");
+//        for (int i=0; i < source.bestYet.length; i++) {
+//            System.out.format(" %6.4f ", source.bestYet[i]);
+//        }
 
         int totRollouts = numIndividuals * Config.INDIVIDUAL_ITERATIONS;
         percVictoriesFound = (double) m_num_victories / totRollouts;

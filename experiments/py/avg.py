@@ -22,18 +22,11 @@ def errorfill(x, y, yerr, color=None, alpha_fill=0.3, ax=None):
     
 ###-- Define input data --###
 
-###-- FOLDER: leftRight
 mergeFiles = []         #don't merge any
 #mergeFiles = [[0,1]]   #example: merge SECOND filename into FIRST
     #define which pairs of files should be merged into one (see above example). The merge copies only the first 8 values from the second list into the first list, the second list is then discarded from the results and filename arrays
 
-#2014_11_04 final measurements for the TEVC paper, leftRight
-#filenames = ['2014_11_04 sampleMCTS','2014_11_04 sampleMCTS (1-8)','2014_11_04 TEVCMCTS handtuned','2014_11_04 TEVCMCTS handtuned (1-8)','2014_11_04 TEVCMCTS random','2014_11_04 TEVCMCTS random (1-8)','2014_11_04 TEVCMCTS one+one','2014_11_04 TEVCMCTS one+one (1-8)','2014_11_04 TEVCMCTS u+one','2014_11_04 TEVCMCTS u+one (1-8)','2014_11_04 TEVCMCTS bandit05','2014_11_04 TEVCMCTS bandit05 (1-8)','2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band05']; mergeFiles = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11]]
-
-#filenames = ['2014_11_16 rl01-50 sampleMCTS d1.00','2014_11_16 rl01-50 sampleMCTS d0.99','2014_11_16 rl01-50 sampleMCTS d0.95','2014_11_16 rl01-50 sampleMCTS d0.90','2014_11_16 rl01-50 sampleMCTS d0.80','2014_11_16 rl01-50 sampleMCTS d0.50','2014_11_16 rl01-50 sampleMCTS d0.10','2014_11_16 rl01-50 sampleMCTS d0.01']
-#filenames = ['2014_11_16 rl01-50 FEMCTS uone d1.00','2014_11_16 rl01-50 FEMCTS uone d0.99','2014_11_16 rl01-50 FEMCTS uone d0.95','2014_11_16 rl01-50 FEMCTS uone d0.90','2014_11_16 rl01-50 FEMCTS uone d0.80','2014_11_16 rl01-50 FEMCTS uone d0.50','2014_11_16 rl01-50 FEMCTS uone d0.10','2014_11_16 rl01-50 FEMCTS uone d0.01']
-#filenames = ['2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
-filenames = ['2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
+###-- FOLDER: leftRight
 
 #filenames = ['2014_11_04 sampleMCTS','2014_11_04 sampleMCTS (1-8)','2014_11_16 rl01-50 d0.90 sampleMCTS']; mergeFiles = [[0,1]]
 #filenames = ['2014_11_04 TEVCMCTS handtuned','2014_11_04 TEVCMCTS handtuned (1-8)','2014_11_16 rl01-50 d0.90 FEMCTS hand']; mergeFiles = [[0,1]]
@@ -42,13 +35,34 @@ filenames = ['2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 
 #filenames = ['2014_11_04 TEVCMCTS u+one','2014_11_04 TEVCMCTS u+one (1-8)','2014_11_16 rl01-50 d0.90 FEMCTS uone']; mergeFiles = [[0,1]]
 #filenames = ['2014_11_04 TEVCMCTS bandit05','2014_11_04 TEVCMCTS bandit05 (1-8)','2014_11_16 rl01-50 d0.90 FEMCTS band05','2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band15','2014_11_16 rl01-50 d0.90 FEMCTS band20','2014_11_16 rl01-50 d0.90 FEMCTS band50','2014_11_16 rl01-50 d0.90 FEMCTS band100']; mergeFiles = [[0,1]]
 
+#filenames = ['2014_11_04 sampleMCTS','2014_11_04 sampleMCTS (1-8)','2014_11_04 TEVCMCTS handtuned','2014_11_04 TEVCMCTS handtuned (1-8)','2014_11_04 TEVCMCTS random','2014_11_04 TEVCMCTS random (1-8)','2014_11_04 TEVCMCTS one+one','2014_11_04 TEVCMCTS one+one (1-8)','2014_11_04 TEVCMCTS u+one','2014_11_04 TEVCMCTS u+one (1-8)','2014_11_04 TEVCMCTS bandit05','2014_11_04 TEVCMCTS bandit05 (1-8)','2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band05']; mergeFiles = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11]]
+
+#filenames = ['2014_11_16 rl01-50 sampleMCTS d1.00','2014_11_16 rl01-50 sampleMCTS d0.99','2014_11_16 rl01-50 sampleMCTS d0.95','2014_11_16 rl01-50 sampleMCTS d0.90','2014_11_16 rl01-50 sampleMCTS d0.80','2014_11_16 rl01-50 sampleMCTS d0.50','2014_11_16 rl01-50 sampleMCTS d0.10','2014_11_16 rl01-50 sampleMCTS d0.01']
+#filenames = ['2014_11_16 rl01-50 FEMCTS uone d1.00','2014_11_16 rl01-50 FEMCTS uone d0.99','2014_11_16 rl01-50 FEMCTS uone d0.95','2014_11_16 rl01-50 FEMCTS uone d0.90','2014_11_16 rl01-50 FEMCTS uone d0.80','2014_11_16 rl01-50 FEMCTS uone d0.50','2014_11_16 rl01-50 FEMCTS uone d0.10','2014_11_16 rl01-50 FEMCTS uone d0.01']
+#filenames = ['2014_11_16 rl01-50 d0.90 sampleMCTS','2014_11_16 rl01-50 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
+#filenames = ['2014_11_16 rl01-50 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band100','2014_11_16 rl01-50 d0.90 FEMCTS band10000']
+
+#filenames = ['2014_12_04 rl01-20 d0.90 FEMCTS rand','2014_11_16 rl01-50 d0.90 FEMCTS rand']
+#filenames = ['2014_12_04 rl01-20 d0.90 FEMCTS hand','2014_11_16 rl01-50 d0.90 FEMCTS hand']
+#filenames = ['2014_12_04 rl01-20 d0.90 FEMCTS oneone','2014_11_16 rl01-50 d0.90 FEMCTS oneone']
+#filenames = ['2014_12_04 rl01-20 d0.90 FEMCTS uone','2014_11_16 rl01-50 d0.90 FEMCTS uone']
+#filenames = ['2014_12_04 rl01-20 d0.90 FEMCTS band10','2014_11_16 rl01-50 d0.90 FEMCTS band10']
+
+#filenames = ['2014_11_16 rl01-50 d0.90 sampleMCTS','2014_12_04 rl01-20 d0.90 FEMCTS rand','2014_12_04 rl01-20 d0.90 FEMCTS hand','2014_12_04 rl01-20 d0.90 FEMCTS oneone','2014_12_04 rl01-20 d0.90 FEMCTS uone','2014_12_04 rl01-20 d0.90 FEMCTS band10','2014_12_04 rl01-20 d0.90 FEMCTS TD a0.1']
+
 ###-- FOLDER: corners
 
 #filenames = ['2014_11_21 RL05-100 d0.9 sampleMCTS','2014_11_21 RL05-100 d0.9 FEMCTS hand','2014_11_21 RL05-100 d0.9 FEMCTS rand','2014_11_21 RL05-100 d0.9 FEMCTS oneone','2014_11_21 RL05-100 d0.9 FEMCTS uone','2014_11_21 RL05-100 d0.9 FEMCTS band05','2014_11_21 RL05-100 d0.9 FEMCTS band20','2014_11_21 RL05-100 d0.9 FEMCTS band100','2014_11_21 RL05-100 d0.9 FEMCTS band1000']
 
+#filenames = ['2014_11_21 RL05-100 d0.9 sampleMCTS','2014_11_21 RL05-100 d0.9 FEMCTS hand','2014_11_21 RL05-100 d0.9 FEMCTS uone','2014_12_05 RL05-100 d0.9 FEMCTS hand','2014_12_05 RL05-100 d0.9 FEMCTS uone']
+#filenames = ['2014_11_21 RL05-100 d0.9 FEMCTS band100','2014_12_05 RL05-100 d0.9 FEMCTS band100','2014_11_21 RL05-100 d0.9 FEMCTS band1000','2014_12_05 RL05-100 d0.9 FEMCTS band1000']
+#filenames = ['2014_11_21 RL05-100 d0.9 FEMCTS rand','2014_12_05 RL05-100 d0.9 FEMCTS rand','2014_11_21 RL05-100 d0.9 FEMCTS oneone','2014_12_05 RL05-100 d0.9 FEMCTS oneone']
+
+filenames = ['2014_11_21 RL05-100 d0.9 sampleMCTS','2014_12_05 RL05-100 d0.9 FEMCTS rand','2014_12_05 RL05-100 d0.9 FEMCTS hand','2014_12_05 RL05-100 d0.9 FEMCTS oneone','2014_12_05 RL05-100 d0.9 FEMCTS uone','2014_12_05 RL05-100 d0.9 FEMCTS band100','2014_12_05 RL05-100 d0.9 FEMCTS band1000','2014_12_05 RL05-100 d0.9 FEMCTS TD a0.1','2014_11_21 RL05-100 d0.9 FEMCTS uone','2014_11_21 RL05-100 d0.9 FEMCTS oneone']
+
 ###-- User config section --###
 
-game = 0
+game = 1
     # 0 - leftRight
     # 1 - corners
   

@@ -81,10 +81,12 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
 
         int ix = 0; // used to step over params
         double tot = 0;
+        //System.out.format("\n");
         for (int i=0; i<nActions; i++) {
             bias[i] = 0;
 
             for (int j=0; j<nFeatures; j++) {
+                //System.out.format(" %4.2f ", featureWeightVector[j]);
                 bias[i] += params[ix] * featureWeightVector[j];
                 ix++;
             }
@@ -200,8 +202,11 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
 
         nFeatures = featuresMap.size();
         params = new double[nDim()];
-        for (int i=0; i<nDim(); i++)
+        //System.out.format("\n");
+        for (int i=0; i<nDim(); i++) {
             params[i] = w[i];
+            //System.out.format(" %6.4f ",params[i]);
+        }
     }
 
     @Override
