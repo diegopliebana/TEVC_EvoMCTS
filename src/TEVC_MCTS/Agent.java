@@ -96,6 +96,8 @@ public class Agent extends AbstractPlayer {
             fe = new CircleFeatures(so);
         else if(Config.FEATURES == Config.LEFTRIGHT_FEATURES)
             fe = new LeftRightFeatures(so);
+        else if(Config.FEATURES == Config.BUTTERFLIES_FEATURES)
+            fe = new ButterfliesFeatures(so);
         else
             fe = new GVGFeatureExtraction();
 
