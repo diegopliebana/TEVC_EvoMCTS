@@ -19,6 +19,13 @@ public class VariableRandomMutHillClimber extends FitVectorSource
     static double noiseFac = 1.5;
     static double oneFifthRule = Math.pow(noiseFac,0.25);
 
+    public double weightsRange[] = new double[]{-10.0,10.0};
+    public double stdDevRange[] = new double[]{0.1,10.0};
+
+    public int nEqualFitnessThreshold = 1000;
+    public int nEqualFitness = 0;
+    public double lastFitness = -Double.MAX_VALUE;
+
     //Following 1-5th rule: https://hal.inria.fr/inria-00430515/file/wk2037-auger.pdf
     //No restarts nor stopping criteria implemented: short evolutions, linear approximation (well behaved),
     //harder to hit local minimum, and need to restart
@@ -61,19 +68,38 @@ public class VariableRandomMutHillClimber extends FitVectorSource
                               double fitness) {
         boolean success = false;
         nEvals++;
-        if (order * fitness >= bestScore * order) {
-            //System.out.println("New best fitness: " + fitness);
+        if (order * fitness > bestScore * order) {
             bestYet = proposed;
             bestScore = fitness;
             // success so increase the noiseDev
             noiseDev *= noiseFac;
+
+            //System.out.println("New best fitness: " + fitness + " " + noiseDev);
             success = true;
-        } else {
-            //System.out.println("No new best fitness: " + fitness + ", best still: " + bestScore);
+        //} else {
+        }else if (order * fitness < bestScore * order) {
             // failure so decrease noiseDev
-            //noiseDev /= noiseFac;
             noiseDev /= oneFifthRule;
+
+            //System.out.println("No new best fitness: " + fitness + ", best still: " + bestScore + " " + noiseDev);
         }
+
+        if(lastFitness == fitness)
+        {
+            nEqualFitness++;
+        }else nEqualFitness = 0;
+
+        lastFitness = fitness;
+
+        if(nEqualFitness > nEqualFitnessThreshold)
+        {
+            noiseDev *= noiseFac;
+            //System.out.println("Flat fitness landscape: " + lastFitness + " x" + nEqualFitness + " new noiseDev: " + noiseDev);
+            nEqualFitness = 0;
+        }
+
+        noiseDev = Math.max(stdDevRange[0], Math.min(stdDevRange[1], noiseDev));
+
         return success;
     }
 
@@ -104,7 +130,11 @@ public class VariableRandomMutHillClimber extends FitVectorSource
                 int weightPos = featurePosition*nActions + actIdx;
 
                 //calculate a new one, and place it in the same position as its feature name.
-                proposed[i++] = bestYet[weightPos] + rand.nextGaussian() * noiseDev;
+                proposed[i] = bestYet[weightPos] + rand.nextGaussian() * noiseDev;
+                proposed[i] = Math.max(weightsRange[0], Math.min(weightsRange[1], proposed[i]));
+
+
+                i++;
             }
         }
         return proposed;

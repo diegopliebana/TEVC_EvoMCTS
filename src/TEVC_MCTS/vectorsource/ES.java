@@ -11,7 +11,10 @@ import java.util.Random;
 
 /**
  * Created by Diego on 20/03/14.
- * (1+1)-ES
+ * (u+1)-ES
+ * The special case (µ + 1) is also referred to as steady-state ES
+ * Rules of sigma followed here:
+ * http://www.uni-oldenburg.de/fileadmin/user_upload/informatik/ag/ci/download/Evolutionary_self-adaptation_a_survey_of_operators_and_strategy_parameters.pdf
  */
 public class ES extends FitVectorSource
 {
@@ -19,7 +22,7 @@ public class ES extends FitVectorSource
     public int popSize = 10;
 
     double initNoiseDev = 0.1;
-    static double noiseFac = 1.02;
+    static double noiseFac = 1.5; //1.02
 
     double lastNoiseDev;
     int lastInit;
@@ -30,6 +33,16 @@ public class ES extends FitVectorSource
     double worstScore;
 
     Memory memory;
+
+
+    boolean RANGE_WEIGHTS_SIGMA = true;
+    public double weightsRange[] = new double[]{-10.0,10.0};
+    public double stdDevRange[] = new double[]{0.1,10.0};
+
+    public int nEqualFitnessThreshold = 500;
+    public int nEqualFitness = 0;
+    public double lastFitness = -Double.MAX_VALUE;
+
 
     public ES(String[] features, int order,
         int nActions, Memory memory, Random rnd) {
@@ -47,22 +60,21 @@ public class ES extends FitVectorSource
             addFeature(f, false);
         }
 
-        noiseDev = new double[popSize];
         bestYet = new double[ nDim() ];
+        noiseDev = new double[bestYet.length];
         fitness = new double[popSize];
         pop = new double[popSize][bestYet.length];
 
         for (int i=0; i< pop.length; i++)
         {
-            noiseDev[i] = initNoiseDev;
             for (int j=0; j<bestYet.length; j++)
                 pop[i][j] = nextRandom();
         }
 
-        for (int i=0; i<  bestYet.length; i++)
+        for (int i=0; i<  bestYet.length; i++) {
             bestYet[i] = nextRandom();
-
-
+            noiseDev[i] = initNoiseDev;
+        }
     }
 
     @Override
@@ -108,13 +120,17 @@ public class ES extends FitVectorSource
                 //calculate a new one, and place it in the same position as its feature name.
                 if(rand.nextDouble() >= 0.5)
                 {
-                    lastNoiseDev =  noiseDev[parent1];
-                    proposed[i++] = pop[parent1][weightPos] + rand.nextGaussian() * noiseDev[parent1];
+                    //lastNoiseDev =  noiseDev[parent1];
+                    proposed[i] = pop[parent1][weightPos] + rand.nextGaussian() * noiseDev[weightPos];
                 }else{
-                    lastNoiseDev =  noiseDev[parent2];
-                    proposed[i++] = pop[parent2][weightPos] + rand.nextGaussian() * noiseDev[parent2];
+                    //lastNoiseDev =  noiseDev[parent2];
+                    proposed[i] = pop[parent2][weightPos] + rand.nextGaussian() * noiseDev[weightPos];
                 }
 
+                if(RANGE_WEIGHTS_SIGMA)
+                    proposed[i] = Math.max(weightsRange[0], Math.min(weightsRange[1], proposed[i]));
+
+                i++;
             }
         }
         return proposed;
@@ -127,7 +143,7 @@ public class ES extends FitVectorSource
                               double fitness) {
         nEvals++;
 
-        boolean success = false;
+        int improve = 0;
         boolean newWorst = false;
         int indIdx = lastInit;
 
@@ -140,13 +156,14 @@ public class ES extends FitVectorSource
             //System.out.println(" [* New best fitness]");
             bestYet = proposed;
             bestScore = fitness;
-            success = true;
+            improve = 1;
         }
 
         if (order * fitness < worstScore * order)
         {
             newWorst = true;
             worstScore = fitness;
+            improve = -1;
         }
 
         if(nEvals-1 < popSize)
@@ -171,17 +188,44 @@ public class ES extends FitVectorSource
                 pop[wIdx] = proposed;
                 this.fitness[wIdx] = fitness;
                 worstScore = wFit;
-                noiseDev[wIdx] = lastNoiseDev;
+                //noiseDev[wIdx] = lastNoiseDev;
                 indIdx = wIdx;
             }
         }
 
-        if(success)
-            noiseDev[indIdx] *= noiseFac;   // success so increase the noiseDev
-        else
-            noiseDev[indIdx] /= noiseFac;   // failure so decrease noiseDev
+        if(improve == 1)
+            for (int i=0; i<  bestYet.length; i++)
+                noiseDev[i] *= noiseFac;   // success so increase the noiseDev
 
-        return success;
+        if(improve == -1)
+            for (int i=0; i<  bestYet.length; i++)
+                noiseDev[i] /= noiseFac;   // failure so decrease noiseDev
+
+
+        if(lastFitness == fitness)
+        {
+            nEqualFitness++;
+        }else nEqualFitness = 0;
+
+        lastFitness = fitness;
+
+        if(nEqualFitness > nEqualFitnessThreshold)
+        {
+            for (int i=0; i<  bestYet.length; i++)
+                noiseDev[i] *= noiseFac;
+            //System.out.println("Flat fitness landscape: " + lastFitness + " x" + nEqualFitness + " new noiseDev: ");
+            //     for (int i=0; i<  bestYet.length; i++)
+            //         System.out.print(noiseDev[i] + ",");
+            //System.out.println();
+            nEqualFitness = 0;
+        }
+
+        if(RANGE_WEIGHTS_SIGMA)
+            for (int i=0; i<  bestYet.length; i++)
+                noiseDev[i] = Math.max(stdDevRange[0], Math.min(stdDevRange[1], noiseDev[i]));
+
+
+        return (improve == 1);
     }
 
 

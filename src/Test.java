@@ -59,7 +59,7 @@ public class Test
 
         //Game and level to play
 
-        int gameIdx = 2; //2:Butterfliess
+        int gameIdx = 3; //2:Butterfliess
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
         String level1 = gamesPath + games[gameIdx] + "_lvl" + levelIdx +".txt";
@@ -69,7 +69,7 @@ public class Test
 
         // 2. This plays a game in a level by the controller.
         //ArcadeMachine.runOneGame(game, level1, visuals, sampleMCTSController, recordActionsFile, seed);
-        ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
+        //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
@@ -99,7 +99,7 @@ public class Test
 
         //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed);
         //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
-        //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
+        Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
 
 
@@ -237,7 +237,7 @@ public class Test
         //This plays the first L levels, M times each. Actions to file optional (set saveActions to true).
         int L = 5;      //number of first L levels
         int M = 200;     //number of repeats (for statistical accuracy) of each level
-        int rollOutLength = 20;
+        int rollOutLength = 30;
 
         String[] levels = new String[L];
 

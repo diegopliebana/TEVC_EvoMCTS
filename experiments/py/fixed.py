@@ -24,24 +24,19 @@ filenames = ['sampleMCTS_controllers.sampleMCTS.Agent_Dist14','sampleMCTS_contro
              'sampleMCTS_controllers.sampleMCTS.Agent_Dist5','sampleMCTS_controllers.sampleMCTS.Agent_Dist4','sampleMCTS_controllers.sampleMCTS.Agent_Dist3',
              'sampleMCTS_controllers.sampleMCTS.Agent_Dist2','sampleMCTS_controllers.sampleMCTS.Agent_Dist1']
 
-filenames = ['tevcMCTS_TEVC_MCTS.Agent_Dist14','tevcMCTS_TEVC_MCTS.Agent_Dist13','tevcMCTS_TEVC_MCTS.Agent_Dist12',
-             'tevcMCTS_TEVC_MCTS.Agent_Dist11','tevcMCTS_TEVC_MCTS.Agent_Dist10','tevcMCTS_TEVC_MCTS.Agent_Dist9',
-             'tevcMCTS_TEVC_MCTS.Agent_Dist8','tevcMCTS_TEVC_MCTS.Agent_Dist7','tevcMCTS_TEVC_MCTS.Agent_Dist6',
-             'tevcMCTS_TEVC_MCTS.Agent_Dist5','tevcMCTS_TEVC_MCTS.Agent_Dist4','tevcMCTS_TEVC_MCTS.Agent_Dist3',
-             'tevcMCTS_TEVC_MCTS.Agent_Dist2','tevcMCTS_TEVC_MCTS.Agent_Dist1']
 
 
-filenames = ['lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist10','lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist9','lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist8',
-             'lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist7', 'lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist6','lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist5',
-             'lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist4', 'lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist3','lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist2',
-             'lr_fixedPos_TECVu1_1000it_100r_TEVC_MCTS.Agent_Dist1']
+filenames = ['LR_TEVC_MCTS.Agent_Dist10','LR_TEVC_MCTS.Agent_Dist9','LR_TEVC_MCTS.Agent_Dist8',
+             'LR_TEVC_MCTS.Agent_Dist7', 'LR_TEVC_MCTS.Agent_Dist6','LR_TEVC_MCTS.Agent_Dist5',
+             'LR_TEVC_MCTS.Agent_Dist4', 'LR_TEVC_MCTS.Agent_Dist3','LR_TEVC_MCTS.Agent_Dist2',
+             'LR_TEVC_MCTS.Agent_Dist1']
 
 
-filenames = ['corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist14','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist13','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist12',
-             'corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist11','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist10','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist9',
-             'corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist8','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist7','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist6',
-             'corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist5','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist4','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist3',
-             'corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist2','corners_fixedPos_TEVCu1_1000it_100r_TEVC_MCTS.Agent_Dist1']
+filenames = ['CR_TEVC_MCTS.Agent_Dist14','CR_TEVC_MCTS.Agent_Dist13','CR_TEVC_MCTS.Agent_Dist12',
+             'CR_TEVC_MCTS.Agent_Dist11','CR_TEVC_MCTS.Agent_Dist10','CR_TEVC_MCTS.Agent_Dist9',
+             'CR_TEVC_MCTS.Agent_Dist8','CR_TEVC_MCTS.Agent_Dist7','CR_TEVC_MCTS.Agent_Dist6',
+             'CR_TEVC_MCTS.Agent_Dist5','CR_TEVC_MCTS.Agent_Dist4','CR_TEVC_MCTS.Agent_Dist3',
+             'CR_TEVC_MCTS.Agent_Dist2','CR_TEVC_MCTS.Agent_Dist1']
 
 averages = [[] for filename in filenames]
 std_err = [[] for filename in filenames]
@@ -51,9 +46,9 @@ for filename in filenames:
 
     
     #datafile = '../circle/' + filename + '.csv'
-    datafile = '../circle/fixedPos_23Nov/' + filename + '.txt'
+    #datafile = '../circle/fixedPos_23Nov/' + filename + '.txt'
     #datafile = '../circle/fixedPos/' + filename + '.txt'
-    #datafile = '../tomConsoleRuns/' + filename + '.txt'
+    datafile = '../lrcr_fixedPos_8Dec/' + filename + '.txt'
 
     print 'loading', datafile
     r = pylab.loadtxt(datafile, comments='#', delimiter=',')
@@ -76,8 +71,8 @@ for filename in filenames:
         else:
             cVal = 'white'
             
-        #text = round(real_average,2)
-        text = round(2*std_dev,2)
+        text = round(real_average,2)
+        #text = round(2*std_dev,2)
             
         #text = round(real_average,2), "(", round(std_err[f][i],2), ")"
         #text = round(std_err[f][i],2)
@@ -126,4 +121,4 @@ plt.ylabel("Distance to goal", fontsize=16)
 
 plt.show()
 
-fig.savefig("../circle/fixedPos_23Nov/corners_fixedPos_TEVCu1_1000it_100r_2xStdDev.pdf")
+fig.savefig("../lrcr_fixedPos_8Dec/CR_TEVC_MCTS.pdf")
