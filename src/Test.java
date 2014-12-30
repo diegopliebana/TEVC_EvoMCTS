@@ -3,7 +3,10 @@ import macroactions.macroFeed.BanditMacroFeed;
 import macroactions.macroFeed.IMacroFeed;
 import macroactions.macroHandler.MacroHandler;
 import macroactions.macroHandler.OneStepMacroHandler;
+import tools.Metrics;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -69,7 +72,7 @@ public class Test
 
         // 2. This plays a game in a level by the controller.
         //ArcadeMachine.runOneGame(game, level1, visuals, sampleMCTSController, recordActionsFile, seed);
-        ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
+        //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
@@ -99,9 +102,9 @@ public class Test
 
         //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed);
         //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
-        //Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
+        Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
-
+        //MetricsTest(gamesPath, seed);
 
         /*int M = 1000;
         boolean isFixedTest = true;
@@ -230,14 +233,14 @@ public class Test
         String wkDir = System.getProperty("user.dir");
         String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".txt";
 
-        int gameIdx = 3;
+        int gameIdx = 3;    //3 - Chase
         //int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
 
         //This plays the first L levels, M times each. Actions to file optional (set saveActions to true).
         int L = 5;      //number of first L levels
         int M = 200;     //number of repeats (for statistical accuracy) of each level
-        int rollOutLength = 20;
+        int rollOutLength = 50;
 
         String[] levels = new String[L];
 
@@ -250,20 +253,19 @@ public class Test
 
     }
 
-
     public static void ChaseTest_2014_11_26(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed){
 
         String wkDir = System.getProperty("user.dir");
         String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".txt";
 
-        int gameIdx = 3;
+        int gameIdx = 3;    //3 - Chase
         //int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
 
         //This plays the first L levels, M times each. Actions to file optional (set saveActions to true).
         int L = 1;      //number of levels starting with lvl5
         int M = 1000;     //number of repeats (for statistical accuracy) of each level
-        int rollOutLength = 10;
+        int rollOutLength = 20;
 
         String[] levels = new String[L];
 
@@ -276,4 +278,49 @@ public class Test
 
     }
 
+    public static void MetricsTest(String gamesPath, int seed)
+    {
+        //---- config section ----//
+
+        //-- experimental settings
+        //String gameSet[] = new String[]{"leftright"};
+        //String gameSet[] = new String[]{"circle"};
+        String gameSet[] = new String[]{"chase"};
+
+        String controller = "TEVC_MCTS.Agent";
+
+        int numLevelsPerGame = 1;
+        int repeats = 100;
+
+        //-- output printing settings
+        int stdOutDepth = 0;   //valid values from 0 to 2
+        int stdOutDetail = 1;  //valid values from 0 to 2
+        boolean printToFiles = true;
+
+        //-- base name of output file(s)
+        String wkDir = System.getProperty("user.dir");
+        String dateText = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+        String outputFilename = wkDir.substring(wkDir.lastIndexOf("\\")+1)+"__"+dateText;
+        String filenameEnding = ".txt";
+
+        //---- END OF CONFIG SECTION ----//
+        // do not change code below here unless you know what you're doing
+
+        // initialize structures and files for gathering experimental results
+        int numGames = gameSet.length;
+        Metrics.initStats(numGames, numLevelsPerGame);
+        if(printToFiles)
+            Metrics.initFiles(outputFilename, filenameEnding);
+
+        // print configuration and stat headers
+        Metrics.printConfiguration(gameSet, numLevelsPerGame, controller, printToFiles);
+        Metrics.printHeader(stdOutDepth,stdOutDetail,"                    "," rep   g l          ", printToFiles);
+
+        // run experiments
+        ArcadeMachine.runGamesMetrics(repeats, gamesPath, gameSet, numLevelsPerGame, controller, seed, stdOutDepth, stdOutDetail, printToFiles);
+
+        // close files
+        if(printToFiles)
+            Metrics.closeFiles();
+    }
 }

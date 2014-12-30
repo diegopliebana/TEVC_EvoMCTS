@@ -174,12 +174,12 @@ public class ChaseFeatures extends NavFeatureSource
         //angry goats and decrease it with scared ones.
         double bias = 0;
 
-        //actions order: left, right, down, up
+        //features in order: up_down_angry, left_right_angry, up_down_scared, left_right_scared ... (up is positive, left is positive)
         return new double[]{
-                bias,  0, -2,  0,  1,
-                bias,  0,  2,  0, -1,
-                bias,  2,  0, -1,  0,
-                bias, -2,  0,  1,  0
+                bias,  0, -2,  0,  1,   //action left
+                bias,  0,  2,  0, -1,   //action right
+                bias,  2,  0, -1,  0,   //action down
+                bias, -2,  0,  1,  0    //action up
         };
 //        return new double[]{
 //                0, 0, 0, 0,

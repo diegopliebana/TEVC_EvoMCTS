@@ -8,7 +8,7 @@ package tools;
  of how many, the sum and the sum of the squares
  is sufficient (plus max and min, for max and min).
 
-  This is a simpler version of StatisticalSummary that does
+ This is a simpler version of StatisticalSummary that does
  not include statistical tests, or the Watch class.
 
  */
@@ -28,6 +28,8 @@ public class StatSummary {
     private double mean;
     private double sd;
 
+    private double sdRel;
+    private double conf;
     // trick class loader into loading this now
     // private static StatisticalTests dummy = new StatisticalTests();
 
@@ -76,10 +78,17 @@ public class StatSummary {
 
     public double mean() {
         if (!valid)
-            computeStats();
+            computeStats(true);
         return mean;
     }
-
+    public double conf(double confidenceFactor)
+    {
+        if (!valid)
+            computeStats(true);
+        if(n > 0)
+            conf = confidenceFactor * sd / Math.sqrt(n);
+        return conf;
+    }
     // returns the sum of the squares of the differences
     //  between the mean and the ith values
     public double sumSquareDiff() {
@@ -87,7 +96,7 @@ public class StatSummary {
     }
 
 
-    private void computeStats() {
+    private void computeStats(boolean isSample) {
         if (!valid) {
             mean = sum / n;
             double num = sumsq - (n * mean * mean);
@@ -96,7 +105,12 @@ public class StatSummary {
                 num = 0;
             }
             // System.out.println("Num = " + num);
-            sd = Math.sqrt(num / (n - 1));
+            if(isSample) {
+                sd = Math.sqrt(num / (n - 1));
+            }else {
+                sd = Math.sqrt(num / n);
+                sdRel = Math.abs(sd / mean);
+            }
             // System.out.println(" Test: sd = " + sd);
             // System.out.println(" Test: n = " + n);
             valid = true;
@@ -105,7 +119,13 @@ public class StatSummary {
 
     public double sd() {
         if (!valid)
-            computeStats();
+            computeStats(true);
+        return sd;
+    }
+
+    public double sdPop() {
+        if (!valid)
+            computeStats(false);
         return sd;
     }
 
@@ -140,7 +160,7 @@ public class StatSummary {
         add(n.doubleValue());
     }
 
-//    public void add(double[] d) {
+    //    public void add(double[] d) {
 //        for (int i = 0; i < d.length; i++) {
 //            add(d[i]);
 //        }
@@ -168,6 +188,21 @@ public class StatSummary {
 
     public double sum() {
         return sum;
+    }
+    public double getN() {
+        return n;
+    }
+    public double getMean() {
+        return mean;
+    }
+    public double getSd() {
+        return sd;
+    }
+    public double getSdRel() {
+        return sdRel;
+    }
+    public double getConf() {
+        return conf;
     }
 
     public StatSummary copy()

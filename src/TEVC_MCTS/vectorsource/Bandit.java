@@ -92,7 +92,9 @@ public class Bandit extends FitVectorSource{
     public double[] getNext(String[] features) {
 
         double bestValue = -Double.MAX_VALUE;
+        double bestVisits = 0;
         lastSelected = -1;
+        int mostVisited = 0;
         for(int i = 0; i < pop.length; ++i)
         {
 
@@ -107,7 +109,14 @@ public class Bandit extends FitVectorSource{
                 lastSelected = i;
                 bestValue = uctValue;
             }
+            if(n[i] > bestVisits) {
+                bestVisits = n[i];
+                mostVisited = i;
+            }
         }
+
+        for (int i=0; i < bestYet.length; i++)
+            bestYet[i] = pop[mostVisited][i];
 
         return pop[lastSelected];
     }
