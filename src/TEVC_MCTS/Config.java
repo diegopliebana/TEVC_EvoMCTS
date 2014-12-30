@@ -30,7 +30,7 @@ public class Config {
     public static boolean OPTIMAL_PLAY_ENABLED = false;
     public static int OPTIMAL_MAX_ACTIONS_RL = 9;
     public static int OPTIMAL_MAX_ACTIONS_CIRCLE = 14;
-    public static int OPTIMAL_MAX_ACTIONS_CHASETEST = 100;
+    public static int OPTIMAL_MAX_ACTIONS_CHASETEST = 8;
 
     //Vector source type.
     public static int HAND_TUNED_WEIGHTS = -1;
@@ -40,7 +40,7 @@ public class Config {
     public static int BANDIT = 3;
     public static int TD = 4;
     public static int CMAES = 5;
-    public static int ES_TYPE = RANDOM;
+    public static int ES_TYPE = MU_PLUS_ONE;
 
     //FEATURES:
     public static int GVG_FEATURES = 0;
