@@ -9,6 +9,9 @@ import java.util.Random;
 
 public class VariableFeatureWeightedRoller implements TunableRoller {
 
+    public double MAX_CAP_VALUE = 0.8;
+    public double MIN_CAP_VALUE = 0.15;
+
     public boolean uniform  = false;
 
     public ArrayList<String> newFeatures;
@@ -79,6 +82,9 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
         if (uniform) return rand.nextInt(nActions);
         double[] featureWeightVector = features.getFeatureVectorAsArray(gameState);
 
+        int highestBiasIdx = -1; //identifies which is the highest bias value
+        double highestBiasValue = -Double.MAX_VALUE; //identifies which is the highest bias value
+
         int ix = 0; // used to step over params
         double tot = 0;
         //System.out.format("\n");
@@ -97,8 +103,18 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
             if(bias[i] == Double.POSITIVE_INFINITY)
                 bias[i] = Double.MAX_VALUE;
 
+            if(bias[i] > highestBiasValue)
+            {
+                highestBiasIdx = i;
+                highestBiasValue = bias[i];
+            }
+
             tot += bias[i];
         }
+
+        //CAP the probabilities to emulate simulation balancing.
+        //maxcap(highestBiasIdx, tot, MAX_CAP_VALUE);
+        mincap(tot, MIN_CAP_VALUE);
 
         // now track relative cumulative probability
         double x = rand.nextDouble();
@@ -116,6 +132,67 @@ public class VariableFeatureWeightedRoller implements TunableRoller {
         return action;
     }
 
+    private void mincap(double tot, double cap)
+    {
+        boolean[] toUpdate = new boolean[bias.length];
+        double probAcum = 0;
+        int numToUpdate = 0;
+
+        for (int i=0; i<nActions; i++) {
+            double bp = bias[i]/tot;
+            if (bp < cap)
+            {
+                probAcum += (cap - bp);
+                bias[i] = cap * tot; //cap the ones with prob < cap
+            }else{
+                toUpdate[i] = true;
+                numToUpdate++;
+            }
+        }
+
+        if(numToUpdate == 0)
+            return;
+
+        double subtractChunk = probAcum / numToUpdate;
+        for (int i=0; i<nActions; i++) {
+            if(toUpdate[i])
+            {
+                bias[i] -= (subtractChunk * tot);
+            }
+        }
+
+
+        /*double b = 0.0;
+        for (int i=0; i<nActions; i++) {
+            b += bias[i];
+        }
+        System.out.println(b/tot);*/
+
+    }
+
+    private void maxcap(int highestBiasIdx, double tot, double cap)
+    {
+        double highestProb = bias[highestBiasIdx]/tot;
+        if(highestProb <= cap)
+            return; //Only cap the probabilities if is greater than cap.
+
+        double remainder = highestProb - cap;           //"extra" probability.
+        double remEach = remainder / (bias.length-1);   //extra piece for each other action.
+
+        //double b = 0.0;
+
+        for (int i=0; i<nActions; i++) {
+            if (i == highestBiasIdx)
+            {
+                bias[i] = cap * tot; //cap the one with the highest probability over the cap.
+            }else{
+                bias[i] += (remEach * tot); //Add pieces to the other action probabilities.
+            }
+            //b += bias[i];
+        }
+
+        //System.out.println(b/tot);
+    }
 
     /*public int roll(StateObservation gameState) {
         if (uniform) return rand.nextInt(nActions);
