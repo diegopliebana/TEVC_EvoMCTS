@@ -102,8 +102,8 @@ public class Test
 
         //RightLeft_2014_11_20(gamesPath, games, controller, sampleMCTSController, seed);
         //Circle_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
-        Chase_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //ChaseTest_2014_11_26(gamesPath, games, controller, sampleMCTSController, seed);
+        ComplexGames_2014_11_21(gamesPath, games, controller, sampleMCTSController, seed);
         //MetricsTest(gamesPath, seed);
 
         /*int M = 1000;
@@ -228,19 +228,23 @@ public class Test
         //ArcadeMachine.runGamesN(game, level1, M, RL, sampleMCTSController, isFixedTest, seed, filename);
     }
 
-    public static void Chase_2014_11_21(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed){
+    public static void ComplexGames_2014_11_21(String gamesPath, String[] games, String controller, String sampleMCTSController, int seed){
 
         String wkDir = System.getProperty("user.dir");
         String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".txt";
 
-        int gameIdx = 3;    //3 - Chase
+        int gameIdx = 13;
+            //2 - Butterflies
+            //3 - Chase
+            //13 - Infection
+
         //int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
 
         //This plays the first L levels, M times each. Actions to file optional (set saveActions to true).
         int L = 5;      //number of first L levels
         int M = 200;     //number of repeats (for statistical accuracy) of each level
-        int rollOutLength = 30;
+        int rollOutLength = 5;
 
         String[] levels = new String[L];
 
