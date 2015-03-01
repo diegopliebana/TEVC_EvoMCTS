@@ -9,10 +9,7 @@ import TEVC_MCTS.vectorsource.FitVectorSource;
 import core.game.Observation;
 import core.game.StateObservation;
 import ontology.Types;
-import tools.ElapsedCpuTimer;
-import tools.StatSummary;
-import tools.Utils;
-import tools.Vector2d;
+import tools.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -188,6 +185,14 @@ public class SingleTreeNode extends TreeNode
             avgTimeTaken  = acumTimeTaken/numIndividuals;
 
         }
+
+
+        int tick = state.getGameTick();
+
+        if(Metrics.isInitialized)
+            if(state.getGameTick() < 100)
+                for(int i = 0; i < source.bestYet.length; i++)
+                    Metrics.lastResults[tick+(i*100)] = source.bestYet[i];
 
 //        System.out.format("\n");
 //        for (int i=0; i < source.bestYet.length; i++) {

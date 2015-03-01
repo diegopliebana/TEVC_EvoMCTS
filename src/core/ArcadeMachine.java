@@ -10,6 +10,7 @@ import macroactions.macroHandler.MacroHandler;
 import macroactions.macroHandler.NormalMacroHandler;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
+import tools.Metrics;
 import tools.StatSummary;
 
 import java.io.*;
@@ -561,6 +562,67 @@ public class ArcadeMachine
         }
     }
 
+    public static void runGamesMetrics(int repeats, String gamesPath, String[] games, int numLevels, String agentName, int randomSeed, int outDepth, int outDetail, boolean printToFiles) {
+
+        if(Metrics.isInitialized) {
+            //start evaluations
+            for (int r = 0; r < repeats; r++) {
+
+                for (int g = 0; g < games.length; g++) {
+
+                    int actionIdx = 0;
+                    String game_file = gamesPath + games[g] + ".txt";
+
+                    for (int l = 0; l < numLevels; l++) {
+
+                        String level_file = gamesPath + games[g] + "_lvl" + l + ".txt";
+
+                        VGDLFactory.GetInstance().init(); //This always first thing to do.
+                        VGDLRegistry.GetInstance().init();
+
+                        Game toPlay = new VGDLParser().parseGame(game_file);
+
+                        //System.out.println(" ** Playing game " + game_file + ", level " + level_file + " (" + (l + 1) + "/" + numLevels + ") **");
+
+                        //build the level in the game.
+                        toPlay.buildLevel(level_file);
+
+                        //Initialize local measurements array
+                        Metrics.resetLastResults();
+
+                        //Second, create the player.
+                        AbstractPlayer player = ArcadeMachine.createPlayer(agentName, null, toPlay.getObservation(), randomSeed);
+
+                        //Third, warm the game up.
+                        ArcadeMachine.warmUp(toPlay, CompetitionParameters.WARMUP_TIME);
+
+                        //Then, play the game.
+                        double score = toPlay.runGame(player, randomSeed, false);
+
+                        //Update statistics
+                        int numMoves = toPlay.getGameTick();
+
+                        Metrics.updateStats(g, l, Metrics.lastResults);     //before calling this procedure, the array Metrics.lastResults[] must have been filled with appropriate values
+
+                        //,Print on stdout and to files
+                        String firstStringLine = String.format("%5d %2d %1d          ", r + 1, g + 1, l + 1);
+                        Metrics.print(System.out, outDepth, outDetail, firstStringLine);
+                        if (printToFiles)
+                            Metrics.updateFiles(r, g, l, firstStringLine);
+
+                        //Finally, when the game is over, we need to tear the player down.
+                        ArcadeMachine.tearPlayerDown(player);
+
+                        //reset the game.
+                        toPlay.reset();
+
+                    }
+
+                }
+
+            }
+        }
+    }
 
     /**
      * Creates a player given its name with package. This class calls the constructor of the agent

@@ -50,7 +50,9 @@ public class Config {
     public static int CIRCLE_FEATURES = 4;
     public static int LEFTRIGHT_FEATURES = 5;
     public static int BUTTERFLIES_FEATURES = 6;
-    public static int FEATURES = CHASE_FEATURES;
+
+    public static int FEATURES = INFECTION_FEATURES;
+    //public static int FEATURES = CHASE_FEATURES;
     //public static int FEATURES = CIRCLE_FEATURES;
     //public static int FEATURES = LEFTRIGHT_FEATURES;
 
