@@ -69,7 +69,7 @@ public class Test
 
         // 2. This plays a game in a level by the controller.
         //ArcadeMachine.runOneGame(game, level1, visuals, sampleMCTSController, recordActionsFile, seed);
-        ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
+        //ArcadeMachine.runOneGame(game, level1, visuals, controller, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_ol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_mol, recordActionsFile, seed);
         //ArcadeMachine.runOneGame(game, level1, visuals, controller_macroMCTS, recordActionsFile, seed);
