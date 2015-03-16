@@ -62,7 +62,7 @@ public class Test
 
         //Game and level to play
 
-        int gameIdx = 3; //2:Butterfliess
+        int gameIdx = 13; //2:Butterflies; 13:infection
         int levelIdx = 0; //level names from 0 to 4 (game_lvlN.txt).
         String game = gamesPath + games[gameIdx] + ".txt";
         String level1 = gamesPath + games[gameIdx] + "_lvl" + levelIdx +".txt";
@@ -233,7 +233,7 @@ public class Test
         String wkDir = System.getProperty("user.dir");
         String filename = wkDir.substring(wkDir.lastIndexOf("\\")+1) + ".txt";
 
-        int gameIdx = 13;
+        int gameIdx = 3;
             //2 - Butterflies
             //3 - Chase
             //13 - Infection
@@ -244,7 +244,7 @@ public class Test
         //This plays the first L levels, M times each. Actions to file optional (set saveActions to true).
         int L = 5;      //number of first L levels
         int M = 200;     //number of repeats (for statistical accuracy) of each level
-        int rollOutLength = 5;
+        int rollOutLength = 20;
 
         String[] levels = new String[L];
 
